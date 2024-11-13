@@ -8,6 +8,7 @@ from ..settings import database, simulation
 from ..terrain.tile import Tile
 from .organism import Organism
 from .properties.dna import DNA
+from .properties.neural_network import NeuralNetwork
 
 
 class Animal(Organism):
@@ -133,6 +134,10 @@ class Animal(Organism):
     animals_died: int = 0
     # endregion
 
+    NUM_INPUTS = 24
+    NUM_HIDDEN = 5
+    NUM_OUTPUTS = 1
+
     def __init__(
         self,
         tile: Tile,
@@ -141,6 +146,7 @@ class Animal(Organism):
         dna: DNA = None,
         health: float = None,
         energy: float = None,
+        nn: NeuralNetwork = None
     ):
         # region defaults
         if not rect:
@@ -188,6 +194,10 @@ class Animal(Organism):
             health = Animal._STARTING_HEALTH
         if energy is None:
             energy = Animal._STARTING_ENERGY
+        if nn is None:
+            self.neural_network = NeuralNetwork(input_size=Animal.NUM_INPUTS, hidden_size=Animal.NUM_HIDDEN, output_size=Animal.NUM_OUTPUTS)
+        else:
+            self.neural_network = nn
         # endregion
 
         super().__init__(
@@ -214,25 +224,9 @@ class Animal(Organism):
         The final selected destination tile is stored in the `desired_tile_movement` attribute for further processing.
         """
         super().think()
-        if self.tile.has_plant():
-            best_growth = self.tile.plant.sprite.health
-            destination = None
-        else:
-            best_growth = 0
-            destination = self.tile.get_random_neigbor()
-
-        ns = self.tile.get_neighboring_tiles()
-        for n in ns:
-            if n.has_animal():
-                if self.attack_power < n.animal.sprite.defense:
-                    continue
-            if not n.has_plant():
-                continue
-            if n.plant.sprite.health > best_growth:
-                best_growth = n.plant.sprite.health
-                destination = n
-
-        self.desired_tile_movement = destination
+        output = self.neural_network.forward(self.percieve_environment())[0]
+        # Lerp the output to a value between 0 and 4, 0 meaning the animal stays on the tile and the other integer values represent a neighbor
+        self.desired_tile_movement = self.tile.get_neighbor_tile(round(output * 4))
 
     def handle_attack(self):
         """
@@ -268,6 +262,29 @@ class Animal(Organism):
                 self.energy -= Animal._MOVEMENT_ENERGY_COST
             except ValueError:
                 pass
+
+    def percieve_environment(self) -> list[int]:
+        # Example input: [self.energy, self.health, ...] + neighboring_tiles info
+        inputs = [
+            self.energy,
+            self.health,
+            self.tile.plant.sprite.health if self.tile.has_plant() else 0,
+            self.tile.plant.sprite.energy if self.tile.has_plant() else 0,
+        ]
+        # For each neighboring tile get the health, energy of plant and animal, and a boolean if it has water on it
+        for tile in self.tile.get_neighboring_tiles():
+            inputs.extend(
+                [
+                    tile.plant.sprite.health if tile.has_plant() else 0,
+                    tile.plant.sprite.energy if tile.has_plant() else 0,
+                    tile.animal.sprite.health if tile.has_animal() else 0,
+                    tile.animal.sprite.energy if tile.has_animal() else 0,
+                    tile.has_water,
+                ]
+            )
+        # Pad the input with -1 for missing directions (for bordering tiles)
+        inputs.extend([-1] * (Animal.NUM_INPUTS - len(inputs)))
+        return inputs
 
     # endregion
 
@@ -351,6 +368,9 @@ class Animal(Organism):
         copied_dna = self.dna.copy()
         copied_dna.mutate()
 
-        return Animal(tile, parent=self, dna=copied_dna, health=health, energy=energy)
+        copied_nn = self.neural_network.copy()
+        copied_nn.mutate()
+
+        return Animal(tile, parent=self, dna=copied_dna, health=health, energy=energy, nn=copied_nn)
 
     # endregion

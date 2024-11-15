@@ -9,3 +9,4 @@ tkinter
 pandas 
 glob2
 matplotlib
+tensorflow

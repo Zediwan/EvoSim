@@ -1,7 +1,12 @@
-﻿namespace EvoSim.Model;
+﻿namespace EvoSim.ECS;
 
 public class Organism
 {
+    #region Constants and Statics
+
+    
+
+    #endregion
 
 
     #region Variables and Properties

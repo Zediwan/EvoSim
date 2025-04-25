@@ -24,9 +24,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
-    <Folder Include="Resources\" />
     <Folder Include="Services\" />
-    <Folder Include="Utilities\" />
     <Folder Include="ViewModel\" />
     <Folder Include="View\" />
   </ItemGroup>

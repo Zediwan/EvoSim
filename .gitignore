@@ -65,3 +65,65 @@ plugins
 user_trunk.yaml
 user.yaml
 tmp
+
+# Build results
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.ilk
+*.log
+*.vspscc
+*.vssscc
+*.userosscache
+*.suo
+*.user
+*.csproj.user
+*.sln.docstates
+
+# Visual Studio working files
+.vscode/
+.idea/
+.vs/
+
+# NuGet packages
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# WPF specific
+*.g.i.cs
+*.g.cs
+*.designer.cs
+Generated_Code/
+
+# Publish output
+*.publishsettings
+*.pubxml
+*.pubxml.user
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Rider IDE files
+.idea/
+*.sln.iml
+
+# Other
+*.DS_Store

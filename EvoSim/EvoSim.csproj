@@ -16,6 +16,9 @@
 	  <Folder Include="Utilities\" />
 	  <Folder Include="Services\" />
 	  <Folder Include="Resources\" />
+	  <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+		  <_Parameter1>EvoSim.Test</_Parameter1>
+	  </AssemblyAttribute>
   </ItemGroup>
 
 </Project>

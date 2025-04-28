@@ -4,5 +4,6 @@ namespace EvoSim.ECS.Components;
 
 public class MovementComponent : IComponent
 {
-
+    public int DX;
+    public int DY;
 }

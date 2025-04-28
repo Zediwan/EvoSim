@@ -4,6 +4,6 @@ namespace EvoSim.ECS.Components;
 
 public class EnergyComponent : IComponent
 {
-    public int Energy;
-    public int MaxEnergy;
+    public float Energy;
+    public float MaxEnergy;
 }

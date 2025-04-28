@@ -12,7 +12,6 @@
   <ItemGroup>
 	  <Folder Include="Data\" />
 	  <Folder Include="ViewModel\" />
-	  <Folder Include="View\" />
 	  <Folder Include="Services\" />
 	  <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
 		  <_Parameter1>EvoSim.Test</_Parameter1>

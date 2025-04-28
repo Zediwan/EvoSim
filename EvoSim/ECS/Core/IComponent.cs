@@ -1,3 +1,6 @@
 ﻿namespace EvoSim.ECS.Core;
 
-public interface IComponent { }
+public interface IComponent
+{
+
+}

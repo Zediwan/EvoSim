@@ -24,6 +24,11 @@ public class EcsEngine
         return _entities.Where(e => e.HasComponent<T>());
     }
 
+    public IEnumerable<Entity> GetEntitiesWith(params Type[] componentTypes)
+    {
+        return _entities.Where(entity => entity.HasComponents(componentTypes));
+    }
+
     public void Update(float deltaTime)
     {
         foreach (var system in _systems)

@@ -16,7 +16,8 @@ public class SimulationEngine
         // Register ECS systems
         EcsEngine.AddSystem(new EnergySystem());
         EcsEngine.AddSystem(new HealthSystem());
-        EcsEngine.AddSystem(new MovementSystem(width, height));
+        EcsEngine.AddSystem(new VelocitySystem(width, height));
+        EcsEngine.AddSystem(new AccelerationSystem());
     }
 
     public void InitializeEntities(int count)

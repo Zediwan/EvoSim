@@ -31,15 +31,10 @@ public class Renderer
         foreach (var entity in ecsEngine.GetEntitiesWith<PositionComponent>())
         {
             var pos = entity.GetComponent<PositionComponent>();
-            var color = entity.HasComponent<ColorComponent>()
-                ? entity.GetComponent<ColorComponent>().ARGB
-                : 0xFFFF0000; // Default to red
 
-            if (pos.X >= 0 && pos.X < _width && pos.Y >= 0 && pos.Y < _height)
-            {
-                int index = pos.Y * _width + pos.X;
-                _pixels[index] = color;
-            }
+            if (pos.X < 0 || pos.X >= _width || pos.Y < 0 || pos.Y >= _height) continue;
+
+            _pixels[pos.Y * _width + pos.X] = entity.HasComponent<ColorComponent>() ? entity.GetComponent<ColorComponent>().ARGB : 0xFFFF0000; // Default to red;
         }
 
         _bitmap.WritePixels(new Int32Rect(0, 0, _width, _height), _pixels, _width * 4, 0);

@@ -39,6 +39,11 @@ public class Entity
         return _Components.ContainsKey(typeof(T));
     }
 
+    public bool HasComponents(params Type[] componentTypes)
+    {
+        return componentTypes.All(type => _Components.ContainsKey(type));
+    }
+
     #endregion
 }
 

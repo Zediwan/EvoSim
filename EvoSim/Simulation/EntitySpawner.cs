@@ -22,7 +22,7 @@ public class EntitySpawner
     {
         var entity = _ecsEngine.CreateEntity();
 
-        var maxHealth = _random.Next(1000);
+        var maxHealth = _random.Next(100);
         var health = _random.Next(maxHealth);
         entity.AddComponent(new HealthComponent
         {
@@ -30,7 +30,7 @@ public class EntitySpawner
             MaxHealth = maxHealth
         });
 
-        var maxEnergy = _random.Next(1000);
+        var maxEnergy = _random.Next(100);
         var energy = _random.Next(maxEnergy);
         entity.AddComponent(new EnergyComponent
         {
@@ -44,17 +44,24 @@ public class EntitySpawner
             Y = _random.Next(_height)
         });
 
-        entity.AddComponent(new MovementComponent
-        {
-            DX = _random.Next(-1, 2),
-            DY = _random.Next(-1, 2)
-        });
-
         entity.AddComponent(new ColorComponent()
         {
             R = (byte)_random.Next(256),
             G = (byte)_random.Next(256),
             B = (byte)_random.Next(256)
         });
+
+        entity.AddComponent(new VelocityComponent
+        {
+            DX = (float)(_random.NextDouble() * 2 - 1), // Random value between -1 and 1
+            DY = (float)(_random.NextDouble() * 2 - 1)  // Random value between -1 and 1
+        });
+
+        entity.AddComponent(new AccelerationComponent
+        {
+            AX = (float)(_random.NextDouble() * 2 - 1), // Random value between -1 and 1
+            AY = (float)(_random.NextDouble() * 2 - 1)  // Random value between -1 and 1
+        });
+
     }
 }

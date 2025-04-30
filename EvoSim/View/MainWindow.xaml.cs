@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -16,7 +17,7 @@ public partial class MainWindow : Window
 
     private readonly int _width = 800;
     private readonly int _height = 600;
-    private readonly float _deltaTime = 0.016f; // ~60 FPS
+    private readonly Stopwatch _stopwatch;
 
     public MainWindow()
     {
@@ -34,14 +35,23 @@ public partial class MainWindow : Window
         _renderer = new Renderer(_bitmap, _width, _height);
 
         // Setup timer for game loop
-        _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(_deltaTime * 1000) };
+        _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) }; // ~60 FPS
         _timer.Tick += OnSimulationTick;
+
+        // Initialize stopwatch for dynamic deltaTime
+        _stopwatch = Stopwatch.StartNew();
+
         _timer.Start();
     }
 
     private void OnSimulationTick(object sender, EventArgs e)
     {
-        _simulation.Update(_deltaTime);
+        // Calculate dynamic deltaTime
+        float deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
+        _stopwatch.Restart();
+
+        // Update simulation and render
+        _simulation.Update(deltaTime);
         _renderer.Clear();
         _renderer.DrawEntities(_simulation.EcsEngine);
     }

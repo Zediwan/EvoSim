@@ -16,6 +16,15 @@ public class EnergySystem : ISystem
 
     public void Update(EcsEngine ecsEngine, float deltaTime)
     {
+        if (_drainRate == 0)
+        {
+#if DEBUG
+            return;
+#else
+            return;
+#endif
+        }
+
         foreach (var entity in ecsEngine.GetEntitiesWith<EnergyComponent>())
         {
             EnergyUtility.UseEnergy(entity, (_drainRate * deltaTime));

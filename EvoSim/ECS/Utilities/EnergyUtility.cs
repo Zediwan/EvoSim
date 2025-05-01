@@ -8,38 +8,70 @@ public static class EnergyUtility
     public static void UseEnergy(Entity entity, float amount)
     {
         if (!entity.HasComponent<EnergyComponent>())
-            throw new InvalidOperationException($"Entity {entity.Id} does not have EnergyComponent.");
-
-        var energy = entity.GetComponent<EnergyComponent>();
-        var excess = energy.Energy - amount;
-
-        Console.WriteLine($"Entity {entity.Id} used {amount} energy. Remaining: {energy.Energy}");
-
-        if (excess < 0)
         {
-            energy.Energy = 0;
+#if DEBUG
+            throw new InvalidOperationException($"Entity {entity.Id} does not have EnergyComponent.");
+#else
+            return;
+#endif
+        }
 
-            Console.WriteLine($"Entity {entity.Id} depleted energy and will lose {excess} health.");
+        if (amount <= 0)
+        {
+#if DEBUG
+            throw new ArgumentOutOfRangeException(nameof(amount), "Amount to use cannot be negative.");
+#else
+            return;
+#endif
+        }
+
+
+        var energyComponent = entity.GetComponent<EnergyComponent>();
+        var newEnergy = energyComponent.Energy - amount;
+
+        Console.WriteLine($"Entity {entity.Id} used {amount} energy. Remaining: {energyComponent.Energy}");
+
+        if (newEnergy < 0)
+        {
+            energyComponent.Energy = 0;
+            var damageTaken = -newEnergy;
+
+            Console.WriteLine($"Entity {entity.Id} depleted energy and will lose {damageTaken} health.");
 
             if (entity.HasComponent<HealthComponent>())
             {
-                HealthUtility.TakeDamage(entity, excess);
+                HealthUtility.TakeDamage(entity, damageTaken);
             }
         }
         else
         {
-            energy.Energy = excess;
+            energyComponent.Energy = newEnergy;
         }
     }
 
     public static void GainEnergy(Entity entity, float amount)
     {
         if (!entity.HasComponent<EnergyComponent>())
+        {
+#if DEBUG
             throw new InvalidOperationException($"Entity {entity.Id} does not have EnergyComponent.");
+#else
+            return;
+#endif
+        }
 
-        var energy = entity.GetComponent<EnergyComponent>();
-        energy.Energy = Math.Min(energy.Energy + amount, energy.MaxEnergy);
+        if (amount <= 0)
+        {
+#if DEBUG
+            throw new ArgumentOutOfRangeException(nameof(amount), "Amount to gain cannot be negative.");
+#else
+            return;
+#endif
+        }
 
-        Console.WriteLine($"Entity {entity.Id} gained {amount} energy. Total: {energy.Energy}");
+        var energyComponent = entity.GetComponent<EnergyComponent>();
+        energyComponent.Energy += amount;
+
+        Console.WriteLine($"Entity {entity.Id} gained {amount} energy. Total: {energyComponent.Energy}");
     }
 }

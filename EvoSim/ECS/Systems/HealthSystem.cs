@@ -1,7 +1,6 @@
 ﻿using EvoSim.ECS.Components;
 using EvoSim.ECS.Core;
 using EvoSim.ECS.Entities;
-using EvoSim.ECS.Utilities;
 
 namespace EvoSim.ECS.Systems;
 

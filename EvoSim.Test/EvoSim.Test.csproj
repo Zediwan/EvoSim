@@ -27,7 +27,6 @@
     <Folder Include="Data\" />
     <Folder Include="ECS\Core\" />
     <Folder Include="ECS\Entities\" />
-    <Folder Include="ECS\Utilities\" />
     <Folder Include="Simulation\" />
     <Folder Include="Rendering\" />
     <Folder Include="Services\" />

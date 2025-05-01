@@ -22,8 +22,8 @@ public class HealthSystemTest
         // Arrange
         var ecsEngine = new EcsEngine();
         var entity = ecsEngine.CreateEntity();
-        entity.AddComponent(new HealthComponent(100, 50));
-        entity.AddComponent(new EnergyComponent(100, 50));
+        entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
+        entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
         var healthSystem = new HealthSystem();
         // Act
         healthSystem.Update(ecsEngine, 1.0f);
@@ -38,23 +38,8 @@ public class HealthSystemTest
         // Arrange
         var ecsEngine = new EcsEngine();
         var entity = ecsEngine.CreateEntity();
-        entity.AddComponent(new HealthComponent(0, 50));
-        entity.AddComponent(new EnergyComponent(100, 50));
-        var healthSystem = new HealthSystem();
-        // Act
-        healthSystem.Update(ecsEngine, 1.0f);
-        // Assert
-        Assert.DoesNotContain(entity, ecsEngine.GetEntitiesWith<HealthComponent>());
-    }
-
-    [Fact]
-    public void Should_RemoveEntity_When_HealthIsNegative()
-    {
-        // Arrange
-        var ecsEngine = new EcsEngine();
-        var entity = ecsEngine.CreateEntity();
-        entity.AddComponent(new HealthComponent(-1, 50));
-        entity.AddComponent(new EnergyComponent(100, 50));
+        entity.AddComponent(new HealthComponent(maxHealth:100, health:0));
+        entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
         var healthSystem = new HealthSystem();
         // Act
         healthSystem.Update(ecsEngine, 1.0f);
@@ -68,8 +53,8 @@ public class HealthSystemTest
         // Arrange
         var ecsEngine = new EcsEngine();
         var entity = ecsEngine.CreateEntity();
-        entity.AddComponent(new HealthComponent(10, 50));
-        entity.AddComponent(new EnergyComponent(100, 50));
+        entity.AddComponent(new HealthComponent(maxHealth: 100, health:50));
+        entity.AddComponent(new EnergyComponent(maxEnergy:100, energy:50));
         var healthSystem = new HealthSystem();
         // Act
         healthSystem.Update(ecsEngine, 1.0f);

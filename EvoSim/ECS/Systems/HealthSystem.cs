@@ -7,25 +7,14 @@ namespace EvoSim.ECS.Systems;
 
 public class HealthSystem : ISystem
 {
-
-    public HealthSystem()
-    {
-
-    }
-
     public void Update(EcsEngine ecsEngine, float deltaTime)
     {
-        var entitiesToRemove = new List<Entity>();
-
-        foreach (var entity in ecsEngine.GetEntitiesWith<HealthComponent>())
-        {
-            var health = entity.GetComponent<HealthComponent>();
-
-            if (!health.IsAlive)
-            {
-                entitiesToRemove.Add(entity);
-            }
-        }
+        var entitiesToRemove = (
+            from entity in ecsEngine.GetEntitiesWith<HealthComponent>() 
+            let health = entity.GetComponent<HealthComponent>() 
+            where !health.IsAlive 
+            select entity
+            ).ToList();
 
         foreach (var entity in entitiesToRemove)
         {
@@ -35,7 +24,7 @@ public class HealthSystem : ISystem
 
     private void HandleDeath(Entity entity, EcsEngine ecsEngine)
     {
-        Console.WriteLine("Entity {EntityId} has died. Removing from world.", entity.Id);
+        Console.WriteLine($"Entity {entity.Id} has died. Removing from world.");
         ecsEngine.RemoveEntity(entity);
     }
 }

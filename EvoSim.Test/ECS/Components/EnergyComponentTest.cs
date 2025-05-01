@@ -19,7 +19,7 @@ public class EnergyComponentCoreTest
     }
     
     [Fact]
-    public void Should_AllowUpdating_values()
+    public void Should_AllowUpdatingValues()
     {
         // Arrange
         var energyComponent = new EnergyComponent(maxEnergy: 20, energy: 10);

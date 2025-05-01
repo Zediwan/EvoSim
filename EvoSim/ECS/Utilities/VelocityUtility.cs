@@ -18,7 +18,11 @@ public static class VelocityUtility
         positionComponent.X += (int) velocityComponent.DX;
         positionComponent.Y += (int) velocityComponent.DY;
 
-        // Wrap around the world, considering negative values
+        CalculateWraparoundPosition(positionComponent, worldWidth, worldHeight);
+    }
+
+    private static void CalculateWraparoundPosition(PositionComponent positionComponent, int worldWidth, int worldHeight)
+    {
         positionComponent.X = ((positionComponent.X % worldWidth) + worldWidth) % worldWidth;
         positionComponent.Y = ((positionComponent.Y % worldHeight) + worldHeight) % worldHeight;
     }

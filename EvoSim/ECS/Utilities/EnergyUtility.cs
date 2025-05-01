@@ -26,6 +26,10 @@ public static class EnergyUtility
                 HealthUtility.TakeDamage(entity, excess);
             }
         }
+        else
+        {
+            energy.Energy = excess;
+        }
     }
 
     public static void GainEnergy(Entity entity, float amount)

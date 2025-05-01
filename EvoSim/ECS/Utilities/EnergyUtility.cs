@@ -11,13 +11,12 @@ public static class EnergyUtility
             throw new InvalidOperationException($"Entity {entity.Id} does not have EnergyComponent.");
 
         var energy = entity.GetComponent<EnergyComponent>();
-        energy.Energy -= amount;
+        var excess = energy.Energy - amount;
 
         Console.WriteLine($"Entity {entity.Id} used {amount} energy. Remaining: {energy.Energy}");
 
-        if (energy.Energy < 0)
+        if (excess < 0)
         {
-            var excess = -energy.Energy;
             energy.Energy = 0;
 
             Console.WriteLine($"Entity {entity.Id} depleted energy and will lose {excess} health.");

@@ -1,6 +1,6 @@
 ﻿namespace EvoSim.Test;
 
-public class DebugTest
+public abstract class DebugTest
 {
 #if DEBUG
     public static bool Debugging => true;
@@ -8,7 +8,7 @@ public class DebugTest
     public static bool Debugging => false;
 #endif
 
-    public DebugTest()
+    protected DebugTest()
     {
         Skip.IfNot(Debugging, "Skipping because this test is only for Debug mode.");
     }

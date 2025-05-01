@@ -1,6 +1,6 @@
 ﻿namespace EvoSim.Test;
 
-public class ReleaseTest
+public abstract class ReleaseTest
 {
 #if DEBUG
     public static bool Debugging => true;
@@ -8,7 +8,7 @@ public class ReleaseTest
     public static bool Debugging => false;
 #endif
 
-    public ReleaseTest()
+    protected ReleaseTest()
     {
         Skip.If(Debugging, "Skipping because this test is only for Release mode.");
     }

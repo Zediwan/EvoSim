@@ -127,3 +127,4 @@ Generated_Code/
 
 # Other
 *.DS_Store
+/TestResults

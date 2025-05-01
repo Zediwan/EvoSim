@@ -24,11 +24,7 @@ public class EntitySpawner
 
         var maxHealth = _random.Next(100);
         var health = _random.Next(maxHealth);
-        entity.AddComponent(new HealthComponent
-        {
-            Health = health,
-            MaxHealth = maxHealth
-        });
+        entity.AddComponent(new HealthComponent(maxHealth: maxHealth, health: health));
 
         var maxEnergy = _random.Next(100);
         var energy = _random.Next(maxEnergy);

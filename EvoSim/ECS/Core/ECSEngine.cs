@@ -3,8 +3,8 @@
 namespace EvoSim.ECS.Core;
 public class EcsEngine
 {
-    private List<Entity> _entities = new();
-    private List<ISystem> _systems = new();
+    private List<Entity> _entities = [];
+    private List<ISystem> _systems = [];
     private int _nextEntityId = 0;
 
     public Entity CreateEntity()

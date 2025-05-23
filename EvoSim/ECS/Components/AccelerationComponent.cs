@@ -4,6 +4,7 @@ namespace EvoSim.ECS.Components;
 
 public class AccelerationComponent : IComponent
 {
+    public float MaxSpeed { get; set; }
     public float AX { get; set; }
     public float AY { get; set; }
 

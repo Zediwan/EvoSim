@@ -6,21 +6,18 @@ public class HealthComponentTest
 {
     public class ConstructorTests
     {
-        public class CoreTests
+        [Fact]
+        public void Should_InitializeWithCorrectValues()
         {
-            [Fact]
-            public void Should_InitializeWithCorrectValues()
-            {
-                // Arrange
-                int health = 10, maxHealth = 20;
+            // Arrange
+            int health = 10, maxHealth = 20;
 
-                // Act
-                var healthComponent = new HealthComponent(maxHealth: maxHealth, health: health);
+            // Act
+            var healthComponent = new HealthComponent(maxHealth: maxHealth, health: health);
 
-                // Assert
-                Assert.Equal(health, healthComponent.Health);
-                Assert.Equal(maxHealth, healthComponent.MaxHealth);
-            }
+            // Assert
+            Assert.Equal(health, healthComponent.Health);
+            Assert.Equal(maxHealth, healthComponent.MaxHealth);
         }
 
         public class DebugTests : DebugTest
@@ -36,61 +33,58 @@ public class HealthComponentTest
 
     public class SetterTests
     {
-        public class CoreTests
+        [Fact]
+        public void Should_AllowUpdatingValues()
         {
-            [Fact]
-            public void Should_AllowUpdatingValues()
-            {
-                // Arrange
-                var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
+            // Arrange
+            var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
 
-                // Act
-                healthComponent.MaxHealth = 25;
-                healthComponent.Health = 15;
+            // Act
+            healthComponent.MaxHealth = 25;
+            healthComponent.Health = 15;
 
-                // Assert
-                Assert.Equal(15, healthComponent.Health);
-                Assert.Equal(25, healthComponent.MaxHealth);
-            }
+            // Assert
+            Assert.Equal(15, healthComponent.Health);
+            Assert.Equal(25, healthComponent.MaxHealth);
+        }
 
-            [Fact]
-            public void Should_BeAlive_WhenHealthIsPositive()
-            {
-                // Arrange
-                var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
+        [Fact]
+        public void Should_BeAlive_WhenHealthIsPositive()
+        {
+            // Arrange
+            var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
 
-                // Act
-                var isAlive = healthComponent.IsAlive;
+            // Act
+            var isAlive = healthComponent.IsAlive;
 
-                // Assert
-                Assert.True(isAlive);
-            }
+            // Assert
+            Assert.True(isAlive);
+        }
 
-            [Fact]
-            public void Should_NotBeAlive_WhenHealthIsZeroOrNegative()
-            {
-                // Arrange
-                var healthComponent = new HealthComponent(maxHealth: 20, health: 0);
+        [Fact]
+        public void Should_NotBeAlive_WhenHealthIsZeroOrNegative()
+        {
+            // Arrange
+            var healthComponent = new HealthComponent(maxHealth: 20, health: 0);
 
-                // Act
-                var isAlive = healthComponent.IsAlive;
+            // Act
+            var isAlive = healthComponent.IsAlive;
 
-                // Assert
-                Assert.False(isAlive);
-            }
+            // Assert
+            Assert.False(isAlive);
+        }
 
-            [Fact]
-            public void Should_ClampHealth_When_MaxHealthSmallerThanHealth()
-            {
-                // Arrange
-                var healthComponent = new HealthComponent(maxHealth: 30, health: 20);
+        [Fact]
+        public void Should_ClampHealth_When_MaxHealthSmallerThanHealth()
+        {
+            // Arrange
+            var healthComponent = new HealthComponent(maxHealth: 30, health: 20);
 
-                // Act
-                healthComponent.MaxHealth = 5;
+            // Act
+            healthComponent.MaxHealth = 5;
 
-                // Assert
-                Assert.Equal(5, healthComponent.Health);
-            }
+            // Assert
+            Assert.Equal(5, healthComponent.Health);
         }
 
         public class DebugTests : DebugTest

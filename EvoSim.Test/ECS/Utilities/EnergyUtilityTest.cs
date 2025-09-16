@@ -8,58 +8,55 @@ public class EnergyUtilityTest
 {
     public class UseEnergyTests()
     {
-        public class CoreTests()
+        [Fact]
+        public void Should_UseEnergy_When_ValidParameters()
         {
-            [Fact]
-            public void Should_UseEnergy_When_ValidParameters()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                float amountToUse = 10;
-                // Act
-                EnergyUtility.UseEnergy(entity, amountToUse);
-                // Assert
-                var energyComponent = entity.GetComponent<EnergyComponent>();
-                Assert.Equal(40, energyComponent.Energy);
-            }
+            // Arrange
+            var ecsEngine = new EcsEngine();
+            var entity = ecsEngine.CreateEntity();
+            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
+            float amountToUse = 10;
+            // Act
+            EnergyUtility.UseEnergy(entity, amountToUse);
+            // Assert
+            var energyComponent = entity.GetComponent<EnergyComponent>();
+            Assert.Equal(40, energyComponent.Energy);
+        }
 
-            [Fact]
-            public void Should_OnlyUseEnergy_When_EntityHasHealthComponentAndSufficientEnergy()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-                float amountToUse = 20;
-                // Act
-                EnergyUtility.UseEnergy(entity, amountToUse);
-                // Assert
-                var energyComponent = entity.GetComponent<EnergyComponent>();
-                var healthComponent = entity.GetComponent<HealthComponent>();
-                Assert.Equal(30, energyComponent.Energy);
-                Assert.Equal(50, healthComponent.Health);
-            }
+        [Fact]
+        public void Should_OnlyUseEnergy_When_EntityHasHealthComponentAndSufficientEnergy()
+        {
+            // Arrange
+            var ecsEngine = new EcsEngine();
+            var entity = ecsEngine.CreateEntity();
+            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
+            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
+            float amountToUse = 20;
+            // Act
+            EnergyUtility.UseEnergy(entity, amountToUse);
+            // Assert
+            var energyComponent = entity.GetComponent<EnergyComponent>();
+            var healthComponent = entity.GetComponent<HealthComponent>();
+            Assert.Equal(30, energyComponent.Energy);
+            Assert.Equal(50, healthComponent.Health);
+        }
 
-            [Fact]
-            public void Should_UseEnergyAndHealth_When_EntityHasHealthComponentAndInsufficientEnergy()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-                float amountToUse = 60;
-                // Act
-                EnergyUtility.UseEnergy(entity, amountToUse);
-                // Assert
-                var energyComponent = entity.GetComponent<EnergyComponent>();
-                var healthComponent = entity.GetComponent<HealthComponent>();
-                Assert.Equal(0, energyComponent.Energy);
-                Assert.Equal(40, healthComponent.Health);
-            }
+        [Fact]
+        public void Should_UseEnergyAndHealth_When_EntityHasHealthComponentAndInsufficientEnergy()
+        {
+            // Arrange
+            var ecsEngine = new EcsEngine();
+            var entity = ecsEngine.CreateEntity();
+            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
+            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
+            float amountToUse = 60;
+            // Act
+            EnergyUtility.UseEnergy(entity, amountToUse);
+            // Assert
+            var energyComponent = entity.GetComponent<EnergyComponent>();
+            var healthComponent = entity.GetComponent<HealthComponent>();
+            Assert.Equal(0, energyComponent.Energy);
+            Assert.Equal(40, healthComponent.Health);
         }
 
         public class DebugTests() : DebugTest
@@ -125,22 +122,19 @@ public class EnergyUtilityTest
 
     public class GainEnergyTests()
     {
-        public class CoreTests()
+        [Fact]
+        public void Should_GainEnergy_When_ValidParameters()
         {
-            [Fact]
-            public void Should_GainEnergy_When_ValidParameters()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                float amountToGain = 20;
-                // Act
-                EnergyUtility.GainEnergy(entity, amountToGain);
-                // Assert
-                var energyComponent = entity.GetComponent<EnergyComponent>();
-                Assert.Equal(70, energyComponent.Energy);
-            }
+            // Arrange
+            var ecsEngine = new EcsEngine();
+            var entity = ecsEngine.CreateEntity();
+            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
+            float amountToGain = 20;
+            // Act
+            EnergyUtility.GainEnergy(entity, amountToGain);
+            // Assert
+            var energyComponent = entity.GetComponent<EnergyComponent>();
+            Assert.Equal(70, energyComponent.Energy);
         }
 
         public class DebugTests() : DebugTest

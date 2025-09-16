@@ -6,21 +6,18 @@ public class EnergyComponentTest
 {
     public class ConstructorTests
     {
-        public class CoreTests
+        [Fact]
+        public void Should_InitializeWithCorrectValues()
         {
-            [Fact]
-            public void Should_InitializeWithCorrectValues()
-            {
-                // Arrange
-                float energy = 10, maxEnergy = 20;
+            // Arrange
+            float energy = 10, maxEnergy = 20;
 
-                // Act
-                var energyComponent = new EnergyComponent(maxEnergy: maxEnergy, energy: energy);
+            // Act
+            var energyComponent = new EnergyComponent(maxEnergy: maxEnergy, energy: energy);
 
-                // Assert
-                Assert.Equal(energy, energyComponent.Energy);
-                Assert.Equal(maxEnergy, energyComponent.MaxEnergy);
-            }
+            // Assert
+            Assert.Equal(energy, energyComponent.Energy);
+            Assert.Equal(maxEnergy, energyComponent.MaxEnergy);
         }
 
         public class DebugTests : DebugTest
@@ -36,33 +33,30 @@ public class EnergyComponentTest
 
     public class SetterTests
     {
-        public class CoreTests
+        [Fact]
+        public void Should_AllowUpdatingValues()
         {
-            [Fact]
-            public void Should_AllowUpdatingValues()
-            {
-                // Arrange
-                var energyComponent = new EnergyComponent(maxEnergy: 20, energy: 10);
-                // Act
-                energyComponent.MaxEnergy = 25;
-                energyComponent.Energy = 15;
-                // Assert
-                Assert.Equal(15, energyComponent.Energy);
-                Assert.Equal(25, energyComponent.MaxEnergy);
-            }
+            // Arrange
+            var energyComponent = new EnergyComponent(maxEnergy: 20, energy: 10);
+            // Act
+            energyComponent.MaxEnergy = 25;
+            energyComponent.Energy = 15;
+            // Assert
+            Assert.Equal(15, energyComponent.Energy);
+            Assert.Equal(25, energyComponent.MaxEnergy);
+        }
 
-            [Fact]
-            public void Should_ClampEnergy_When_MaxEnergySmallerThanEnergy()
-            {
-                // Arrange
-                var energyComponent = new EnergyComponent(maxEnergy: 20, energy: 10);
+        [Fact]
+        public void Should_ClampEnergy_When_MaxEnergySmallerThanEnergy()
+        {
+            // Arrange
+            var energyComponent = new EnergyComponent(maxEnergy: 20, energy: 10);
 
-                // Act
-                energyComponent.MaxEnergy = 5;
+            // Act
+            energyComponent.MaxEnergy = 5;
 
-                // Assert
-                Assert.Equal(energyComponent.MaxEnergy, energyComponent.Energy);
-            }
+            // Assert
+            Assert.Equal(energyComponent.MaxEnergy, energyComponent.Energy);
         }
 
         public class DebugTests : DebugTest

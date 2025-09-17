@@ -11,6 +11,10 @@ namespace EvoSim.ECS.Components;
 public class VelocityComponent : IComponent
 {
     /// <summary>
+    /// Gets or sets the maximum velocity, in units per second, that an object can achieve.
+    /// </summary>
+    public float MaxVelocity { get; set; }
+    /// <summary>
     /// Gets or sets the horizontal displacement value.
     /// </summary>
     public float DX { get; set; }

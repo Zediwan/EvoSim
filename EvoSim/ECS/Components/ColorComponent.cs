@@ -2,6 +2,9 @@
 
 namespace EvoSim.ECS.Components;
 
+/// <summary>
+/// Represents a color component with red, green, and blue channels, each defined as a value between 0 and 255.
+/// </summary>
 public class ColorComponent : IComponent
 {
     /// <summary>

@@ -3,6 +3,12 @@ using EvoSim.ECS.Core;
 
 namespace EvoSim.ECS.Components;
 
+/// <summary>
+/// Represents a health component for an entity, managing its current health, maximum health, and alive status.
+/// </summary>
+/// <remarks>This component enforces constraints on health values, ensuring that the current health cannot exceed
+/// the maximum health or fall below zero. The <see cref="IsAlive"/> property provides a quick way to determine if the
+/// entity is still alive.</remarks>
 public class HealthComponent : IComponent
 {
     private float _health;

@@ -2,6 +2,9 @@
 
 namespace EvoSim.ECS.Components;
 
+/// <summary>
+/// Represents a component that defines a position in a two-dimensional space.
+/// </summary>
 public class PositionComponent : IComponent
 {
     /// <summary>

@@ -18,8 +18,11 @@ public static class HealthUtility
         Debug.Assert(entity.HasComponent<HealthComponent>(), $"Entity {entity.Id} does not have a {nameof(HealthComponent)}.");
         Debug.Assert(amount >= 0, $"Damage amount ({amount}) cannot be negative.");
 
+        if (!entity.HasComponent<HealthComponent>()) return;
         var health = entity.GetComponent<HealthComponent>();
-        
+
+        amount = Math.Max(amount, 0);
+
         Console.WriteLine($"Entity {entity.Id} took {amount} damage. Remaining Health: {health.Health - amount}");
 
         health.Health = Math.Max(health.Health - amount, 0);
@@ -40,8 +43,12 @@ public static class HealthUtility
     public static void Heal(Entity entity, float amount)
     {
         Debug.Assert(entity.HasComponent<HealthComponent>(), $"Entity {entity.Id} does not have a {nameof(HealthComponent)}.");
+        Debug.Assert(amount >= 0, $"Heal amount ({amount}) cannot be negative.");
 
+        if (!entity.HasComponent<HealthComponent>()) return;
         var health = entity.GetComponent<HealthComponent>();
+
+        amount = Math.Max(amount, 0);
         health.Health = Math.Min(health.Health + amount, health.MaxHealth);
 
         Console.WriteLine($"Entity {entity.Id} healed by {amount}. Current Health: {health.Health}");
@@ -55,10 +62,11 @@ public static class HealthUtility
     /// than or equal to zero; otherwise, <see langword="false"/>.</returns>
     public static bool IsDead(Entity entity)
     {
-        if (!entity.HasComponent<HealthComponent>())
-            return true;
+        Debug.Assert(entity.HasComponent<HealthComponent>(), $"Entity {entity.Id} does not have a {nameof(HealthComponent)}.");
 
+        if (!entity.HasComponent<HealthComponent>()) return true;
         var health = entity.GetComponent<HealthComponent>();
+
         return health.Health <= 0;
     }
 }

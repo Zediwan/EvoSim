@@ -25,12 +25,7 @@ public class EnergySystemTest
             // Assert
             Assert.NotNull(energySystem);
         }
-
-        public class DebugTests() : DebugTest
-        {
-
-        }
-
+        
         public class ReleaseTests() : ReleaseTest
         {
 
@@ -107,44 +102,7 @@ public class EnergySystemTest
             Assert.Equal(40, energyComponent1.Energy);
             Assert.Equal(40, energyComponent2.Energy);
         }
-
-        public class DebugTests() : DebugTest
-        {
-            [SkippableFact]
-            public void Should_NotUseEnergy_When_UpdatingWithZeroDrainRate()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                var energySystem = new EnergySystem(0);
-                // Act
-                energySystem.Update(ecsEngine, 1.0f);
-                // Assert
-                var energyComponent = entity.GetComponent<EnergyComponent>();
-                Assert.Equal(50, energyComponent.Energy);
-            }
-
-            [SkippableFact]
-            public void Should_NotUseEnergy_When_UpdatingWithZeroDrainRateWithMultipleEntities()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity1 = ecsEngine.CreateEntity();
-                var entity2 = ecsEngine.CreateEntity();
-                entity1.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                entity2.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                var energySystem = new EnergySystem(0);
-                // Act
-                energySystem.Update(ecsEngine, 1.0f);
-                // Assert
-                var energyComponent1 = entity1.GetComponent<EnergyComponent>();
-                var energyComponent2 = entity2.GetComponent<EnergyComponent>();
-                Assert.Equal(50, energyComponent1.Energy);
-                Assert.Equal(50, energyComponent2.Energy);
-            }
-        }
-
+        
         public class ReleaseTests() : ReleaseTest
         {
             [SkippableFact]

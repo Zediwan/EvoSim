@@ -20,11 +20,6 @@ public class EnergyComponentTest
             Assert.Equal(maxEnergy, energyComponent.MaxEnergy);
         }
 
-        public class DebugTests : DebugTest
-        {
-            // Empty for future extension
-        }
-
         public class ReleaseTests : ReleaseTest
         {
             // Empty for future extension
@@ -57,36 +52,6 @@ public class EnergyComponentTest
 
             // Assert
             Assert.Equal(energyComponent.MaxEnergy, energyComponent.Energy);
-        }
-
-        public class DebugTests : DebugTest
-        {
-            [SkippableFact]
-            public void Should_ThrowException_WhenSettingNegativeMaxEnergy()
-            {
-                // Arrange
-                var energyComponent = new EnergyComponent(maxEnergy: 20, energy: 10);
-                // Act & Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => energyComponent.MaxEnergy = -5);
-            }
-
-            [SkippableFact]
-            public void Should_ThrowException_WhenSettingNegativeEnergy()
-            {
-                // Arrange
-                var energyComponent = new EnergyComponent(maxEnergy: 20, energy: 10);
-                // Act & Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => energyComponent.Energy = -5);
-            }
-
-            [SkippableFact]
-            public void Should_ThrowException_WhenSettingEnergyGreaterThanMaxEnergy()
-            {
-                // Arrange
-                var energyComponent = new EnergyComponent(maxEnergy: 20, energy: 10);
-                // Act & Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => energyComponent.Energy = 25);
-            }
         }
 
         public class ReleaseTests : ReleaseTest

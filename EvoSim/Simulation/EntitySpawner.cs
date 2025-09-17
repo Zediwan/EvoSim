@@ -28,11 +28,7 @@ public class EntitySpawner
 
         var maxEnergy = _random.Next(100);
         var energy = _random.Next(maxEnergy);
-        entity.AddComponent(new EnergyComponent
-        {
-            Energy = energy,
-            MaxEnergy = maxEnergy
-        });
+        entity.AddComponent(new EnergyComponent(maxEnergy: maxEnergy, energy: energy));
 
         entity.AddComponent(new PositionComponent
         {

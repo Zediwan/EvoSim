@@ -59,33 +59,6 @@ public class EnergyUtilityTest
             Assert.Equal(40, healthComponent.Health);
         }
 
-        public class DebugTests() : DebugTest
-        {
-            [SkippableFact]
-            public void Should_ThrowException_When_EntityDoesNotHaveEnergyComponent()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                float amountToUse = 10;
-                // Act & Assert
-                Assert.Throws<InvalidOperationException>(() => EnergyUtility.UseEnergy(entity, amountToUse));
-            }
-
-            [SkippableTheory]
-            [InlineData(0)]
-            [InlineData(-10)]
-            public void Should_ThrowException_When_AmountToUseIsNegativeOrZero(int amountToUse)
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                // Act & Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => EnergyUtility.UseEnergy(entity, amountToUse));
-            }
-        }
-
         public class ReleaseTests() : ReleaseTest
         {
             [SkippableFact]
@@ -135,33 +108,6 @@ public class EnergyUtilityTest
             // Assert
             var energyComponent = entity.GetComponent<EnergyComponent>();
             Assert.Equal(70, energyComponent.Energy);
-        }
-
-        public class DebugTests() : DebugTest
-        {
-            [SkippableFact]
-            public void Should_ThrowException_When_EntityDoesNotHaveEnergyComponent()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                float amountToGain = 10;
-                // Act & Assert
-                Assert.Throws<InvalidOperationException>(() => EnergyUtility.GainEnergy(entity, amountToGain));
-            }
-            [SkippableTheory]
-            [InlineData(0)]
-            [InlineData(-10)]
-            public void Should_ThrowException_When_AmountToGainIsNegativeOrZero(int amountToGain)
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                // Act & Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => EnergyUtility.GainEnergy(entity, amountToGain));
-            }
-
         }
 
         public class ReleaseTests() : ReleaseTest

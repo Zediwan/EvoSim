@@ -127,7 +127,5 @@ public class Organism
     #endregion
 
     #endregion
-
-
 }
 

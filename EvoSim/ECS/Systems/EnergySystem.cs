@@ -1,4 +1,5 @@
-﻿using EvoSim.ECS.Components;
+﻿using System.Diagnostics;
+using EvoSim.ECS.Components;
 using EvoSim.ECS.Core;
 using EvoSim.ECS.Entities;
 using EvoSim.ECS.Utilities;
@@ -16,14 +17,8 @@ public class EnergySystem : ISystem
 
     public void Update(EcsEngine ecsEngine, float deltaTime)
     {
-        if (_drainRate == 0)
-        {
-#if DEBUG
-            return;
-#else
-            return;
-#endif
-        }
+        Debug.Assert(deltaTime >= 0, $"Delta time ({deltaTime}) cannot be negative.");
+        Debug.Assert(_drainRate >= 0, $"Drain rate ({_drainRate}) cannot be negative.");
 
         foreach (var entity in ecsEngine.GetEntitiesWith<EnergyComponent>())
         {

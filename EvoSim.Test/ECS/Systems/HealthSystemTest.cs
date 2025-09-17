@@ -17,11 +17,6 @@ public class HealthSystemTest
             Assert.NotNull(healthSystem);
         }
 
-        public class DebugTests : DebugTest
-        {
-            // Empty for future extension
-        }
-
         public class ReleaseTests : ReleaseTest
         {
             // Empty for future extension
@@ -74,11 +69,6 @@ public class HealthSystemTest
             healthSystem.Update(ecsEngine, 1.0f);
             // Assert
             Assert.Contains(entity, ecsEngine.GetEntitiesWith<HealthComponent>());
-        }
-
-        public class DebugTests : DebugTest
-        {
-            // Empty for future extension
         }
 
         public class ReleaseTests : ReleaseTest

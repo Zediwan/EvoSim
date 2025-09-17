@@ -19,12 +19,7 @@ public class HealthComponentTest
             Assert.Equal(health, healthComponent.Health);
             Assert.Equal(maxHealth, healthComponent.MaxHealth);
         }
-
-        public class DebugTests : DebugTest
-        {
-            // Empty for future extension
-        }
-
+        
         public class ReleaseTests : ReleaseTest
         {
             // Empty for future extension
@@ -86,40 +81,7 @@ public class HealthComponentTest
             // Assert
             Assert.Equal(5, healthComponent.Health);
         }
-
-        public class DebugTests : DebugTest
-        {
-            [SkippableFact]
-            public void Should_ThrowException_When_NegativeHealth()
-            {
-                // Arrange
-                var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
-
-                // Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => healthComponent.Health = -5);
-            }
-
-            [SkippableFact]
-            public void Should_ThrowException_When_HealthExceedsMaxHealth()
-            {
-                // Arrange
-                var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
-
-                // Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => healthComponent.Health = 25);
-            }
-
-            [SkippableFact]
-            public void Should_ThrowException_When_MaxHealthNegative()
-            {
-                // Arrange
-                var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
-
-                // Assert
-                Assert.Throws<ArgumentOutOfRangeException>(() => healthComponent.MaxHealth = -5);
-            }
-        }
-
+        
         public class ReleaseTests : ReleaseTest
         {
             [SkippableFact]

@@ -7,30 +7,43 @@ namespace EvoSim.ECS.Utilities;
 public static class HealthUtility
 {
     /// <summary>
-    /// Reduces the health of the specified entity by the given damage amount.
+    /// Reduces the health of the specified entity by the given amount.
     /// </summary>
-    /// <remarks>If the damage reduces the entity's health to zero or below, the entity is considered dead. 
-    /// The method ensures that the health value does not drop below zero.</remarks>
+    /// <remarks>If the entity does not have a <see cref="HealthComponent"/>, the method will return without
+    /// applying any damage.</remarks>
     /// <param name="entity">The entity whose health will be reduced. The entity must have a <see cref="HealthComponent"/>.</param>
-    /// <param name="amount">The amount of damage to apply. Must be a non-negative value.</param>
+    /// <param name="amount">The amount of damage to apply to the entity's health. Must be a non-negative value.</param>
     public static void TakeDamage(Entity entity, float amount)
     {
         Debug.Assert(entity.HasComponent<HealthComponent>(), $"Entity {entity.Id} does not have a {nameof(HealthComponent)}.");
-        Debug.Assert(amount >= 0, $"Damage amount ({amount}) cannot be negative.");
 
         if (!entity.HasComponent<HealthComponent>()) return;
-        var health = entity.GetComponent<HealthComponent>();
+        TakeDamage(entity.GetComponent<HealthComponent>(), amount);
+    }
 
+    /// <summary>
+    /// Reduces the health of the specified <see cref="HealthComponent"/> by the given damage amount.
+    /// </summary>
+    /// <remarks>If the specified <paramref name="healthComponent"/> is already dead, the method will return
+    /// without applying any damage. The health value is clamped to ensure it does not drop below zero. If the health
+    /// reaches zero, the entity is considered dead.</remarks>
+    /// <param name="healthComponent">The <see cref="HealthComponent"/> representing the entity whose health will be reduced. Must be alive prior to
+    /// calling this method.</param>
+    /// <param name="amount">The amount of damage to apply. Must be a non-negative value.</param>
+    public static void TakeDamage(HealthComponent healthComponent, float amount)
+    {
+        Debug.Assert(healthComponent.IsAlive, $"An already dead Component is being damaged (Health: {healthComponent.Health})");
+        if (!healthComponent.IsAlive) return;
+
+        Debug.Assert(amount >= 0, $"Damage amount ({amount}) cannot be negative.");
         amount = Math.Max(amount, 0);
 
-        Console.WriteLine($"Entity {entity.Id} took {amount} damage. Remaining Health: {health.Health - amount}");
+        Console.WriteLine($"Entity took {amount} damage. Remaining Health: {healthComponent.Health - amount}");
 
-        health.Health = Math.Max(health.Health - amount, 0);
+        healthComponent.Health = Math.Max(healthComponent.Health - amount, 0);
 
-        if (!health.IsAlive)
-        {
-            Console.WriteLine($"Entity {entity.Id} health depleted. Entity is now dead.");
-        }
+        if (!healthComponent.IsAlive)
+            Console.WriteLine($"Entity health depleted. Entity is now dead.");
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using EvoSim.ECS.Components;
+﻿using System.Diagnostics;
+using EvoSim.ECS.Components;
 using EvoSim.ECS.Core;
 using EvoSim.ECS.Utilities;
 
@@ -13,8 +14,23 @@ namespace EvoSim.ECS.Systems;
 /// ECS (Entity Component System) framework.</remarks>
 /// <param name="width"></param>
 /// <param name="height"></param>
-public class PositionSystem(int width, int height) : ISystem
+public class PositionSystem : ISystem
 {
+    public int Width;
+    public int Height;
+
+    public PositionSystem(int width, int height)
+    {
+        if (width <= 0)
+            throw new ArgumentOutOfRangeException(nameof(width), width, "Width must be larger than 0.");
+        if (height <= 0)
+            throw new ArgumentOutOfRangeException(nameof(height), height, "Height must be larger than 0.");
+
+        Width = width;
+        Height = height;
+    }
+
+
     /// <summary>
     /// Updates the positions of all entities with a <see cref="PositionComponent"/> in the specified ECS engine, 
     /// ensuring their positions are wrapped around within the defined boundaries.
@@ -28,7 +44,7 @@ public class PositionSystem(int width, int height) : ISystem
     {
         foreach (var entity in world.GetEntitiesWith(typeof(PositionComponent)))
         {
-            PositionUtility.ApplyWraparound(entity.GetComponent<PositionComponent>(), width, height);
+            PositionUtility.ApplyWraparound(entity.GetComponent<PositionComponent>(), Width, Height);
         }
     }
 }

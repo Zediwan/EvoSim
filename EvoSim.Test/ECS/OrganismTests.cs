@@ -1,5 +1,5 @@
-﻿using Xunit;
-using EvoSim.Model;
+﻿using EvoSim.ECS;
+using Xunit;
 
 namespace EvoSim.Test.Model;
 
@@ -47,6 +47,11 @@ public class OrganismTests
             // Assert
             Assert.Throws<ArgumentOutOfRangeException>(() => new Organism(startingHealth: health, startingEnergy: energy));
         }
+    }
+
+    public class HealthTests
+    {
+
     }
 
     public class TakeDamageTests
@@ -232,4 +237,5 @@ public class OrganismTests
             Assert.Throws<ArgumentOutOfRangeException>(() => _organism.UseEnergy(energyUsed));
         }
     }
+
 }

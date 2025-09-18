@@ -28,6 +28,13 @@ public class PositionUtility
         if (worldWidth <= 0) return;
         if (worldHeight <= 0) return;
 
+        // Early exit if already within bounds
+        if (positionComponent.X >= 0 && positionComponent.X < worldWidth &&
+            positionComponent.Y >= 0 && positionComponent.Y < worldHeight)
+        {
+            return;
+        }
+
         positionComponent.X = ((positionComponent.X % worldWidth) + worldWidth) % worldWidth;
         positionComponent.Y = ((positionComponent.Y % worldHeight) + worldHeight) % worldHeight;
     }

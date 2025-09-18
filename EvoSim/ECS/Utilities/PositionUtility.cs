@@ -8,7 +8,7 @@ namespace EvoSim.ECS.Utilities;
 /// </summary>
 /// <remarks>This class contains methods to handle position-related calculations, such as ensuring objects remain
 /// within the boundaries of a rectangular world by applying wraparound effects.</remarks>
-public class PositionUtility
+public static class PositionUtility
 {
     /// <summary>
     /// Adjusts the position of an object to ensure it wraps around within the boundaries of a rectangular world.

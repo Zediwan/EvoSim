@@ -13,7 +13,7 @@ namespace EvoSim.ECS.Utilities;
 /// cref="AccelerationComponent"/>  and <see cref="VelocityComponent"/>, and perform no operation if the necessary
 /// components are missing or if  invalid parameters are provided. These utilities are designed to be used in
 /// physics-based simulations or  similar systems where acceleration and velocity updates are required.</remarks>
-public class AccelerationUtility
+public static class AccelerationUtility
 {
     /// <summary>
     /// Applies acceleration to the specified entity over a given time interval.

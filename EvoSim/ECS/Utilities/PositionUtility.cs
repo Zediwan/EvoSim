@@ -11,16 +11,16 @@ namespace EvoSim.ECS.Utilities;
 public static class PositionUtility
 {
     /// <summary>
-    /// Adjusts the position of an object to ensure it wraps around within the boundaries of a rectangular world.
+    /// Adjusts the position of an object to ensure it wraps around within the bounds of a defined world.
     /// </summary>
-    /// <remarks>This method ensures that the object's position remains within the bounds of the world by
-    /// applying a wraparound effect.  If the position exceeds the world dimensions, it is wrapped to the opposite
-    /// side.</remarks>
-    /// <param name="positionComponent">The position component representing the object's current coordinates. The X and Y values will be modified to fit
-    /// within the specified world dimensions.</param>
+    /// <remarks>If the object's position exceeds the boundaries of the world, it is wrapped around to the
+    /// opposite side using modular arithmetic. This ensures the position remains within the range [0, <paramref
+    /// name="worldWidth"/>) for the X-coordinate and [0, <paramref name="worldHeight"/>) for the
+    /// Y-coordinate.</remarks>
+    /// <param name="positionComponent">The position component representing the object's current coordinates.</param>
     /// <param name="worldWidth">The width of the world. Must be greater than zero.</param>
     /// <param name="worldHeight">The height of the world. Must be greater than zero.</param>
-    public static void CalculateWraparoundPosition(PositionComponent positionComponent, int worldWidth, int worldHeight)
+    public static void ApplyWraparound(PositionComponent positionComponent, int worldWidth, int worldHeight)
     {
         Debug.Assert(worldWidth > 0, $"World width ({worldWidth}) must be greater than zero.");
         Debug.Assert(worldHeight > 0, $"World height ({worldHeight}) must be greater than zero.");

@@ -5,7 +5,7 @@ namespace EvoSim.Test.ECS.Utilities;
 
 public class PositionUtilityTest
 {
-    public class CalculateWraparoundPositionTests
+    public class ApplyWraparoundTests
     {
         [Fact]
         public void Should_NotWraparound_When_InsideBounds()
@@ -15,7 +15,7 @@ public class PositionUtilityTest
             var worldWidth = 100;
             var worldHeight = 100;
             // Act
-            PositionUtility.CalculateWraparoundPosition(positionComponent, worldWidth, worldHeight);
+            PositionUtility.ApplyWraparound(positionComponent, worldWidth, worldHeight);
             // Assert
             Assert.Equal(50, positionComponent.X);
         }
@@ -34,7 +34,7 @@ public class PositionUtilityTest
             var worldWidth = 100;
             var worldHeight = 100;
             // Act
-            PositionUtility.CalculateWraparoundPosition(positionComponent, worldWidth, worldHeight);
+            PositionUtility.ApplyWraparound(positionComponent, worldWidth, worldHeight);
             // Assert
             Assert.Equal(expectedX, positionComponent.X);
             Assert.Equal(expectedY, positionComponent.Y);
@@ -78,7 +78,7 @@ public class PositionUtilityTest
                 // Arrange
                 var positionComponent = new PositionComponent { X = x, Y = y };
                 // Act
-                PositionUtility.CalculateWraparoundPosition(positionComponent, worldWidth, worldHeight);
+                PositionUtility.ApplyWraparound(positionComponent, worldWidth, worldHeight);
                 // Assert
                 Assert.Equal(x, positionComponent.X);
                 Assert.Equal(y, positionComponent.Y);

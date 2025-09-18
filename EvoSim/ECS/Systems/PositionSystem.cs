@@ -28,7 +28,7 @@ public class PositionSystem(int width, int height) : ISystem
     {
         foreach (var entity in world.GetEntitiesWith(typeof(PositionComponent)))
         {
-            PositionUtility.CalculateWraparoundPosition(entity.GetComponent<PositionComponent>(), width, height);
+            PositionUtility.ApplyWraparound(entity.GetComponent<PositionComponent>(), width, height);
         }
     }
 }

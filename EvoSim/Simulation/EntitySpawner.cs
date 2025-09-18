@@ -3,24 +3,13 @@ using EvoSim.ECS.Components;
 
 namespace EvoSim.Simulation;
 
-public class EntitySpawner
+public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
 {
-    private readonly EcsEngine _ecsEngine;
-    private readonly Random _random;
-    private readonly int _width;
-    private readonly int _height;
-
-    public EntitySpawner(EcsEngine ecsEngine, int width, int height)
-    {
-        _ecsEngine = ecsEngine;
-        _width = width;
-        _height = height;
-        _random = new Random();
-    }
+    private readonly Random _random = new();
 
     public void SpawnEntity()
     {
-        var entity = _ecsEngine.CreateEntity();
+        var entity = ecsEngine.CreateEntity();
 
         var maxHealth = _random.Next(100);
         var health = _random.Next(maxHealth);
@@ -32,8 +21,8 @@ public class EntitySpawner
 
         entity.AddComponent(new PositionComponent
         {
-            X = _random.Next(_width),
-            Y = _random.Next(_height)
+            X = _random.Next(width),
+            Y = _random.Next(height)
         });
 
         entity.AddComponent(new ColorComponent()

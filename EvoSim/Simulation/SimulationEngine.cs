@@ -14,15 +14,16 @@ public class SimulationEngine
         _spawner = new EntitySpawner(EcsEngine, width, height);
 
         // Register ECS systems
-        EcsEngine.AddSystem(new EnergySystem());
+        EcsEngine.AddSystem(new EnergySystem(drainRate: 2));
         EcsEngine.AddSystem(new HealthSystem());
-        EcsEngine.AddSystem(new VelocitySystem(width, height));
         EcsEngine.AddSystem(new AccelerationSystem());
+        EcsEngine.AddSystem(new VelocitySystem());
+        EcsEngine.AddSystem(new PositionSystem(width, height));
     }
 
     public void InitializeEntities(int count)
     {
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             _spawner.SpawnEntity();
         }

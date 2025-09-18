@@ -12,9 +12,11 @@ public class VelocityComponentTest
         public void Should_SetCorrectly_When_SettingPositiveMaxVelocity(float velocity)
         {
             // Arrange
-            var velocityComponent = new VelocityComponent();
-            // Act
-            velocityComponent.MaxVelocity = velocity;
+            var velocityComponent = new VelocityComponent
+            {
+                // Act
+                MaxVelocity = velocity
+            };
             // Assert
             Assert.Equal(velocity, velocityComponent.MaxVelocity);
         }
@@ -25,9 +27,11 @@ public class VelocityComponentTest
             public void Should_ClampToZero_When_SettingNegativeMaxVelocity()
             {
                 // Arrange
-                var velocityComponent = new VelocityComponent();
-                // Act
-                velocityComponent.MaxVelocity = -10;
+                var velocityComponent = new VelocityComponent
+                {
+                    // Act
+                    MaxVelocity = -10
+                };
                 // Assert
                 Assert.Equal(0, velocityComponent.MaxVelocity);
             }

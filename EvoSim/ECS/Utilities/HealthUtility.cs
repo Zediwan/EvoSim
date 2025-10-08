@@ -36,7 +36,7 @@ public static class HealthUtility
         if (!healthComponent.IsAlive) return;
 
         Debug.Assert(amount >= 0, $"Damage amount ({amount}) cannot be negative.");
-        amount = Math.Max(amount, 0);
+        if (amount <= 0) return;
 
         Console.WriteLine($"Entity took {amount} damage. Remaining Health: {healthComponent.Health - amount}");
 
@@ -47,24 +47,34 @@ public static class HealthUtility
     }
 
     /// <summary>
-    /// Restores health to the specified entity, up to its maximum health.
+    /// Heals an entity by the specified amount.
     /// </summary>
-    /// <remarks>If the resulting health exceeds the entity's maximum health, it will be capped at the maximum
-    /// health value.</remarks>
-    /// <param name="entity">The entity to heal. The entity must have a <see cref="HealthComponent"/>.</param>
-    /// <param name="amount">The amount of health to restore. Must be a non-negative value.</param>
+    /// <param name="entity">The entity whose health will be healed. The entity must have a <see cref="HealthComponent"/>.</param>
+    /// <param name="amount">The amount of healing to apply to the entity's health. Must be a non-negative value.</param>
     public static void Heal(Entity entity, float amount)
     {
         Debug.Assert(entity.HasComponent<HealthComponent>(), $"Entity {entity.Id} does not have a {nameof(HealthComponent)}.");
-        Debug.Assert(amount >= 0, $"Heal amount ({amount}) cannot be negative.");
 
         if (!entity.HasComponent<HealthComponent>()) return;
-        var health = entity.GetComponent<HealthComponent>();
+        Heal(entity.GetComponent<HealthComponent>(), amount);
+    }
 
-        amount = Math.Max(amount, 0);
-        health.Health = Math.Min(health.Health + amount, health.MaxHealth);
+    /// <summary>
+    /// Restores health to the specified <see cref="HealthComponent"/> by the given amount, up to its maximum health.
+    /// </summary>
+    /// <remarks>If the specified <paramref name="healthComponent"/> is not alive, the method will return
+    /// without applying any healing. The resulting health will not exceed the component's maximum health.</remarks>
+    /// <param name="healthComponent">The <see cref="HealthComponent"/> to heal. Must be alive to receive healing.</param>
+    /// <param name="amount">The amount of health to restore. Must be a non-negative value.</param>
+    public static void Heal(HealthComponent healthComponent, float amount)
+    {
+        Debug.Assert(amount >= 0, $"Heal amount ({amount}) cannot be negative.");
+        Debug.Assert(healthComponent.IsAlive, $"Trying to heal an already dead health Component. (Health: {healthComponent.Health})");
 
-        Console.WriteLine($"Entity {entity.Id} healed by {amount}. Current Health: {health.Health}");
+        if (!healthComponent.IsAlive) return;
+        if (amount <= 0) return;
+
+        healthComponent.Health = Math.Min(healthComponent.Health + amount, healthComponent.MaxHealth);
     }
 
     /// <summary>

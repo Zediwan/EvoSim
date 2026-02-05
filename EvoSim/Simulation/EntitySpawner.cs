@@ -6,8 +6,9 @@ namespace EvoSim.Simulation;
 public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
 {
     private readonly Random _random = new();
+    public double ChanceOfInitialAcceleration = 0;
 
-    public void SpawnEntity(double chanceOfAcceleration = .5)
+    public void SpawnEntity()
     {
         var entity = ecsEngine.CreateEntity();
 
@@ -38,12 +39,14 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
             DY = (float)(_random.NextDouble() * 2 - 1)  // Random value between -1 and 1
         });
 
-        var ac = new AccelerationComponent();
-        if (Random.Shared.NextDouble() < chanceOfAcceleration)
+        entity.AddComponent(new AccelerationComponent
         {
-            ac.AX = (float)(_random.NextDouble() * 2 - 1); // Random value between -1 and 1
-            ac.AY = (float)(_random.NextDouble() * 2 - 1); // Random value between -1 and 1
-        }
-        entity.AddComponent(ac);
+            AX = Random.Shared.NextDouble() < ChanceOfInitialAcceleration
+                ? (float)(_random.NextDouble() * 2 - 1)
+                : 0, // Random value between -1 and 1 or 0
+            AY = Random.Shared.NextDouble() < ChanceOfInitialAcceleration
+                ? (float)(_random.NextDouble() * 2 - 1)
+                : 0 // Random value between -1 and 1 or 0
+        });
     }
 }

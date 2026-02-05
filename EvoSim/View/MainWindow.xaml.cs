@@ -1,10 +1,10 @@
-﻿using System.Diagnostics;
+﻿using EvoSim.Rendering;
+using EvoSim.Simulation;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using EvoSim.Simulation;
-using EvoSim.Rendering;
 
 namespace EvoSim;
 

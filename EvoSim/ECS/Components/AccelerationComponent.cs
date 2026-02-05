@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using EvoSim.ECS.Core;
+﻿using EvoSim.ECS.Core;
+using System.Diagnostics;
 
 namespace EvoSim.ECS.Components;
 

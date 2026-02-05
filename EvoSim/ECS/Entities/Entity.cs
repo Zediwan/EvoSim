@@ -10,7 +10,7 @@ public class Entity
 
     #region Variables and Properties
     public int Id { get; }
-    private Dictionary<Type, IComponent> _Components = new ();
+    private Dictionary<Type, IComponent> _Components = new();
     #endregion
 
     #region Constructors and Destructors

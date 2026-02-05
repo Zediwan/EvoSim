@@ -1,6 +1,7 @@
 ﻿using EvoSim.ECS.Entities;
 
 namespace EvoSim.ECS.Core;
+
 public class EcsEngine
 {
     private List<Entity> _entities = [];

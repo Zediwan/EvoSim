@@ -9,9 +9,9 @@ public class HealthSystem : ISystem
     public void Update(EcsEngine ecsEngine, float deltaTime)
     {
         var entitiesToRemove = (
-            from entity in ecsEngine.GetEntitiesWith<HealthComponent>() 
-            let health = entity.GetComponent<HealthComponent>() 
-            where !health.IsAlive 
+            from entity in ecsEngine.GetEntitiesWith<HealthComponent>()
+            let health = entity.GetComponent<HealthComponent>()
+            where !health.IsAlive
             select entity
             ).ToList();
 

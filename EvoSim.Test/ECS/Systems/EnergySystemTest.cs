@@ -25,12 +25,12 @@ public class EnergySystemTest
             // Assert
             Assert.NotNull(energySystem);
         }
-        
+
         public class ReleaseTests() : ReleaseTest
         {
 
         }
-        
+
     }
 
     public class UpdateTests
@@ -102,7 +102,7 @@ public class EnergySystemTest
             Assert.Equal(40, energyComponent1.Energy);
             Assert.Equal(40, energyComponent2.Energy);
         }
-        
+
         public class ReleaseTests() : ReleaseTest
         {
             [SkippableFact]

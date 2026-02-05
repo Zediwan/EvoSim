@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Media.Imaging;
+﻿using EvoSim.ECS.Components;
 using EvoSim.ECS.Core;
-using EvoSim.ECS.Components;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace EvoSim.Rendering;
 

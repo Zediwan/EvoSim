@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using EvoSim.ECS.Components;
+﻿using EvoSim.ECS.Components;
 using EvoSim.ECS.Entities;
+using System.Diagnostics;
 
 namespace EvoSim.ECS.Utilities;
 

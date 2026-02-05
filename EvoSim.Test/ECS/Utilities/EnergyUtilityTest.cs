@@ -15,7 +15,7 @@ public class EnergyUtilityTest
             var ecsEngine = new EcsEngine();
             var entity = ecsEngine.CreateEntity();
             entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            float amountToUse = 10;
+            const float amountToUse = 10;
             // Act
             EnergyUtility.UseEnergy(entity, amountToUse);
             // Assert
@@ -31,7 +31,7 @@ public class EnergyUtilityTest
             var entity = ecsEngine.CreateEntity();
             entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
             entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            float amountToUse = 20;
+            const float amountToUse = 20;
             // Act
             EnergyUtility.UseEnergy(entity, amountToUse);
             // Assert
@@ -49,7 +49,7 @@ public class EnergyUtilityTest
             var entity = ecsEngine.CreateEntity();
             entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
             entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            float amountToUse = 60;
+            const float amountToUse = 60;
             // Act
             EnergyUtility.UseEnergy(entity, amountToUse);
             // Assert
@@ -67,7 +67,7 @@ public class EnergyUtilityTest
                 // Arrange
                 var ecsEngine = new EcsEngine();
                 var entity = ecsEngine.CreateEntity();
-                float amountToUse = 10;
+                const float amountToUse = 10;
                 // Act
                 EnergyUtility.UseEnergy(entity, amountToUse);
                 // Assert
@@ -102,7 +102,7 @@ public class EnergyUtilityTest
             var ecsEngine = new EcsEngine();
             var entity = ecsEngine.CreateEntity();
             entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            float amountToGain = 20;
+            const float amountToGain = 20;
             // Act
             EnergyUtility.GainEnergy(entity, amountToGain);
             // Assert
@@ -118,7 +118,7 @@ public class EnergyUtilityTest
                 // Arrange
                 var ecsEngine = new EcsEngine();
                 var entity = ecsEngine.CreateEntity();
-                float amountToGain = 10;
+                const float amountToGain = 10;
                 // Act
                 EnergyUtility.GainEnergy(entity, amountToGain);
                 // Assert

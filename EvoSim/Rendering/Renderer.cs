@@ -5,25 +5,16 @@ using System.Windows.Media.Imaging;
 
 namespace EvoSim.Rendering;
 
-public class Renderer
+public class Renderer(WriteableBitmap bitmap, int width, int height)
 {
-    private readonly WriteableBitmap _bitmap;
-    private readonly uint[] _pixels;
-    private readonly int _width;
-    private readonly int _height;
-
-    public Renderer(WriteableBitmap bitmap, int width, int height)
-    {
-        _bitmap = bitmap;
-        _width = width;
-        _height = height;
-        _pixels = new uint[width * height];
-    }
+    private readonly uint[] _pixels = new uint[width * height];
 
     public void Clear()
     {
-        for (int i = 0; i < _pixels.Length; i++)
+        for (var i = 0; i < _pixels.Length; i++)
+        {
             _pixels[i] = 0xFF000000; // ARGB Black
+        }
     }
 
     public void DrawEntities(EcsEngine ecsEngine)
@@ -32,11 +23,11 @@ public class Renderer
         {
             var pos = entity.GetComponent<PositionComponent>();
 
-            if (pos.X < 0 || pos.X >= _width || pos.Y < 0 || pos.Y >= _height) continue;
+            if (pos.X < 0 || pos.X >= width || pos.Y < 0 || pos.Y >= height) continue;
 
-            _pixels[pos.Y * _width + pos.X] = entity.HasComponent<ColorComponent>() ? entity.GetComponent<ColorComponent>().ARGB : 0xFFFFFFFF; // Default to white
+            _pixels[pos.Y * width + pos.X] = entity.HasComponent<ColorComponent>() ? entity.GetComponent<ColorComponent>().ARGB : 0xFFFFFFFF; // Default to white
         }
 
-        _bitmap.WritePixels(new Int32Rect(0, 0, _width, _height), _pixels, _width * 4, 0);
+        bitmap.WritePixels(new Int32Rect(0, 0, width, height), _pixels, width * 4, 0);
     }
 }

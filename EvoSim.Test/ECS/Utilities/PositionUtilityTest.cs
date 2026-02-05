@@ -12,8 +12,8 @@ public class PositionUtilityTest
         {
             // Arrange
             var positionComponent = new PositionComponent { X = 50, Y = 50 };
-            var worldWidth = 100;
-            var worldHeight = 100;
+            const int worldWidth = 100;
+            const int worldHeight = 100;
             // Act
             PositionUtility.ApplyWraparound(positionComponent, worldWidth, worldHeight);
             // Assert
@@ -31,8 +31,8 @@ public class PositionUtilityTest
         {
             // Arrange
             var positionComponent = new PositionComponent { X = x, Y = y };
-            var worldWidth = 100;
-            var worldHeight = 100;
+            const int worldWidth = 100;
+            const int worldHeight = 100;
             // Act
             PositionUtility.ApplyWraparound(positionComponent, worldWidth, worldHeight);
             // Assert

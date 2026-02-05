@@ -6,7 +6,7 @@ namespace EvoSim.Simulation;
 public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
 {
     private readonly Random _random = new();
-    public double ChanceOfInitialAcceleration = 0;
+    public double ChanceOfInitialAcceleration = .2;
     public double ChanceOfInitialVelocity = 1;
     public int ColorRangeMinR = 0;
     public int ColorRangeMaxR = 256;

@@ -6,7 +6,7 @@ namespace EvoSim.ECS.Systems;
 
 public class AccelerationSystem : ISystem
 {
-    private const int MAX_ROTATION_ANGLE = 45; // degrees
+    private const int MaxRotationAngle = 45; // degrees
 
     public void Update(EcsEngine ecsEngine, float deltaTime)
     {
@@ -14,7 +14,7 @@ public class AccelerationSystem : ISystem
         {
             var accelerationComponent = entity.GetComponent<AccelerationComponent>();
             var (rotX, rotY) = VectorUtility.GetRotationVector(accelerationComponent.AX, accelerationComponent.AY,
-                Random.Shared.NextDouble() * MAX_ROTATION_ANGLE * 2 - MAX_ROTATION_ANGLE);
+                Random.Shared.NextDouble() * MaxRotationAngle * 2 - MaxRotationAngle);
             // Randomly change acceleration
             AccelerationUtility.ApplyAcceleration(entity, rotX, rotY, deltaTime);
             // Apply acceleration to velocity

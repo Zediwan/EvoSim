@@ -1,5 +1,5 @@
-﻿using EvoSim.ECS.Core;
-using EvoSim.ECS.Components;
+﻿using EvoSim.ECS.Components;
+using EvoSim.ECS.Core;
 
 namespace EvoSim.Simulation;
 
@@ -8,6 +8,12 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
     private readonly Random _random = new();
     public double ChanceOfInitialAcceleration = 0;
     public double ChanceOfInitialVelocity = 1;
+    public int ColorRangeMinR = 0;
+    public int ColorRangeMaxR = 256;
+    public int ColorRangeMinG = 0;
+    public int ColorRangeMaxG = 256;
+    public int ColorRangeMinB = 0;
+    public int ColorRangeMaxB = 256;
 
     public void SpawnEntity()
     {
@@ -29,9 +35,9 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
 
         entity.AddComponent(new ColorComponent
         {
-            R = (byte)_random.Next(256),
-            G = (byte)_random.Next(256),
-            B = (byte)_random.Next(256)
+            R = (byte)_random.Next(ColorRangeMinR, ColorRangeMaxR),
+            G = (byte)_random.Next(ColorRangeMinG, ColorRangeMaxG),
+            B = (byte)_random.Next(ColorRangeMinB, ColorRangeMaxB)
         });
 
         entity.AddComponent(new VelocityComponent

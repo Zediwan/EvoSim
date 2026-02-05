@@ -43,6 +43,7 @@ public class EnergyComponent : IComponent
             Debug.Assert(value >= 0, $"MaxEnergy ({MaxEnergy}) cannot be negative.");
 
             _maxEnergy = Math.Max(0, value);
+            // TODO: define if setting max Energy should clamp current energy or not.
             Energy = Math.Min(Energy, MaxEnergy); // Ensure current energy does not exceed new max energy
         }
     }

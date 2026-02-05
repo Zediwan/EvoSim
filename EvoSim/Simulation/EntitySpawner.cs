@@ -7,7 +7,7 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
 {
     private readonly Random _random = new();
 
-    public void SpawnEntity()
+    public void SpawnEntity(double chanceOfAcceleration = .5)
     {
         var entity = ecsEngine.CreateEntity();
 
@@ -25,7 +25,7 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
             Y = _random.Next(height)
         });
 
-        entity.AddComponent(new ColorComponent()
+        entity.AddComponent(new ColorComponent
         {
             R = (byte)_random.Next(256),
             G = (byte)_random.Next(256),
@@ -38,11 +38,12 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
             DY = (float)(_random.NextDouble() * 2 - 1)  // Random value between -1 and 1
         });
 
-        entity.AddComponent(new AccelerationComponent
+        var ac = new AccelerationComponent();
+        if (Random.Shared.NextDouble() < chanceOfAcceleration)
         {
-            AX = (float)(_random.NextDouble() * 2 - 1), // Random value between -1 and 1
-            AY = (float)(_random.NextDouble() * 2 - 1)  // Random value between -1 and 1
-        });
-
+            ac.AX = (float)(_random.NextDouble() * 2 - 1); // Random value between -1 and 1
+            ac.AY = (float)(_random.NextDouble() * 2 - 1); // Random value between -1 and 1
+        }
+        entity.AddComponent(ac);
     }
 }

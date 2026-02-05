@@ -45,10 +45,10 @@ public class VelocityComponentTest
         [InlineData(5, 12, 13)] // 5-12-13 triangle
         [InlineData(8, 15, 17)] // 8-15-17 triangle
         [InlineData(0, 0, 0)] // Zero velocity
-        public void Should_CalculateTotalVelocityCorrectly(float dx, float dy, float expectedTotalVelocity)
+        public void Should_CalculateTotalVelocityCorrectly(float vx, float vy, float expectedTotalVelocity)
         {
             // Arrange
-            var velocityComponent = new VelocityComponent { DX = dx, DY = dy };
+            var velocityComponent = new VelocityComponent { VX = vx, VY = vy };
             // Act
             var totalVelocity = velocityComponent.TotalVelocity;
             // Assert
@@ -63,10 +63,10 @@ public class VelocityComponentTest
         [InlineData(5, 12, 169)] // 5-12-13 triangle
         [InlineData(8, 15, 289)] // 8-15-17 triangle
         [InlineData(0, 0, 0)] // Zero velocity
-        public void Should_CalculateTotalVelocitySquaredCorrectly(float dx, float dy, float expectedTotalVelocitySquared)
+        public void Should_CalculateTotalVelocitySquaredCorrectly(float vx, float vy, float expectedTotalVelocitySquared)
         {
             // Arrange
-            var velocityComponent = new VelocityComponent { DX = dx, DY = dy };
+            var velocityComponent = new VelocityComponent { VX = vx, VY = vy };
             // Act
             var totalVelocitySquared = velocityComponent.TotalVelocitySquared;
             // Assert

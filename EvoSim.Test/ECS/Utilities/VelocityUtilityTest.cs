@@ -16,11 +16,11 @@ public class VelocityUtilityTest
             var ecsEngine = new EcsEngine();
             var entity = ecsEngine.CreateEntity();
             var position = new PositionComponent { X = 10, Y = 20 };
-            var velocity = new VelocityComponent { DX = 5.5f, DY = -3.2f };
+            var velocity = new VelocityComponent { VX = 5.5f, VY = -3.2f };
             entity.AddComponent(position);
             entity.AddComponent(velocity);
-            var expectedX = position.X + (int)velocity.DX; // 10 + 5 = 15
-            var expectedY = position.Y + (int)velocity.DY; // 20 - 3 = 17
+            var expectedX = position.X + (int)velocity.VX; // 10 + 5 = 15
+            var expectedY = position.Y + (int)velocity.VY; // 20 - 3 = 17
             // Act
             VelocityUtility.ApplyVelocityToPosition(entity);
             // Assert
@@ -33,7 +33,7 @@ public class VelocityUtilityTest
         {
             // Arrange
             var position = new PositionComponent { X = 10, Y = 20 };
-            var velocity = new VelocityComponent { DX = 0, DY = 0 };
+            var velocity = new VelocityComponent { VX = 0, VY = 0 };
             var expectedX = position.X; // 10
             var expectedY = position.Y; // 20
             // Act
@@ -68,7 +68,7 @@ public class VelocityUtilityTest
                 // Arrange
                 var ecsEngine = new EcsEngine();
                 var entity = ecsEngine.CreateEntity();
-                var velocity = new VelocityComponent { DX = 5.5f, DY = -3.2f };
+                var velocity = new VelocityComponent { VX = 5.5f, VY = -3.2f };
                 entity.AddComponent(velocity);
                 // Act & Assert
                 VelocityUtility.ApplyVelocityToPosition(entity);

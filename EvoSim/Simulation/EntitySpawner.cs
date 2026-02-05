@@ -42,10 +42,10 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
 
         entity.AddComponent(new VelocityComponent
         {
-            DX = Random.Shared.NextDouble() < ChanceOfInitialVelocity
+            VX = Random.Shared.NextDouble() < ChanceOfInitialVelocity
                 ? (float)(_random.NextDouble() * 2 - 1)
                 : 0, // Random value between -1 and 1 or 0
-            DY = Random.Shared.NextDouble() < ChanceOfInitialVelocity
+            VY = Random.Shared.NextDouble() < ChanceOfInitialVelocity
                 ? (float)(_random.NextDouble() * 2 - 1)
                 : 0 // Random value between -1 and 1 or 0
         });

@@ -67,8 +67,8 @@ public static class AccelerationUtility
 
         // TODO: add max velocity limit based on entity traits
 
-        velocityComponent.DX += accelerationComponent.AX * deltaTime;
-        velocityComponent.DY += accelerationComponent.AY * deltaTime;
+        velocityComponent.VX += accelerationComponent.AX * deltaTime;
+        velocityComponent.VY += accelerationComponent.AY * deltaTime;
 
         if (accelerationComponent.TotalAccelerationSquared > 0)
         {

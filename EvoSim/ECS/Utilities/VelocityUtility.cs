@@ -46,7 +46,7 @@ public static class VelocityUtility
 
         // TODO: add max velocity limit based on entity traits
 
-        positionComponent.X += (int)velocityComponent.DX;
-        positionComponent.Y += (int)velocityComponent.DY;
+        positionComponent.X += (int)velocityComponent.VX;
+        positionComponent.Y += (int)velocityComponent.VY;
     }
 }

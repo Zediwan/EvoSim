@@ -28,17 +28,17 @@ public class VelocityComponent : IComponent
     /// <summary>
     /// Gets or sets the horizontal displacement value.
     /// </summary>
-    public float DX { get; set; }
+    public float VX { get; set; }
     /// <summary>
     /// Gets or sets the vertical displacement value.
     /// </summary>
-    public float DY { get; set; }
+    public float VY { get; set; }
 
     /// <summary>
     /// Gets the squared magnitude of the total velocity, calculated as the sum of the squares of the X and Y velocity
     /// components.
     /// </summary>
-    public float TotalVelocitySquared => DX * DX + DY * DY;
+    public float TotalVelocitySquared => VX * VX + VY * VY;
 
     /// <summary>
     /// Gets the total velocity as a single scalar value.

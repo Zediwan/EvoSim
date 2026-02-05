@@ -16,7 +16,7 @@ public class EnergySystem : ISystem
     {
         get => _drainRate;
         set
-{
+        {
             Debug.Assert(value >= 0, $"Drain rate ({value}) cannot be negative.");
             _drainRate = Math.Max(value, 0);
         }
@@ -25,7 +25,7 @@ public class EnergySystem : ISystem
     public void Update(EcsEngine ecsEngine, float deltaTime)
     {
         Debug.Assert(deltaTime >= 0, $"Delta time ({deltaTime}) cannot be negative.");
-        Debug.Assert(drainRate >= 0, $"Drain rate ({drainRate}) cannot be negative.");
+        if (deltaTime <= 0) return;
 
         foreach (var entity in ecsEngine.GetEntitiesWith<EnergyComponent>())
         {

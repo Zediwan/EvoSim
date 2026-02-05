@@ -1,4 +1,5 @@
-﻿using EvoSim.ECS.Components;
+﻿using System.Diagnostics;
+using EvoSim.ECS.Components;
 using EvoSim.ECS.Core;
 using EvoSim.ECS.Entities;
 
@@ -8,12 +9,15 @@ public class HealthSystem : ISystem
 {
     public void Update(EcsEngine ecsEngine, float deltaTime)
     {
+        Debug.Assert(deltaTime >= 0, $"Delta time ({deltaTime}) cannot be negative.");
+        if (deltaTime <= 0) return;
+
         var entitiesToRemove = (
             from entity in ecsEngine.GetEntitiesWith<HealthComponent>()
             let health = entity.GetComponent<HealthComponent>()
             where !health.IsAlive
             select entity
-            ).ToList();
+        ).ToList();
 
         foreach (var entity in entitiesToRemove)
         {

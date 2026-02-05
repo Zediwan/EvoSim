@@ -14,7 +14,7 @@ public class SimulationEngine
         _spawner = new EntitySpawner(EcsEngine, width, height);
 
         // Register ECS systems
-        EcsEngine.AddSystem(new EnergySystem(drainRate: 2));
+        EcsEngine.AddSystem(new EnergySystem{DrainRate = 2});
         EcsEngine.AddSystem(new HealthSystem());
         EcsEngine.AddSystem(new AccelerationSystem());
         EcsEngine.AddSystem(new VelocitySystem());

@@ -21,16 +21,14 @@ public class EnergySystemTest
         public void Should_InitializeWithCorrectValues()
         {
             // Act
-            var energySystem = new EnergySystem(5);
+            var energySystem = new EnergySystem() { DrainRate = 5 };
             // Assert
             Assert.NotNull(energySystem);
         }
 
         public class ReleaseTests() : ReleaseTest
         {
-
         }
-
     }
 
     public class UpdateTests
@@ -76,7 +74,7 @@ public class EnergySystemTest
             var ecsEngine = new EcsEngine();
             var entity = ecsEngine.CreateEntity();
             entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            var energySystem = new EnergySystem(10);
+            var energySystem = new EnergySystem() { DrainRate = 10 };
             // Act
             energySystem.Update(ecsEngine, 1.0f);
             // Assert
@@ -93,7 +91,7 @@ public class EnergySystemTest
             var entity2 = ecsEngine.CreateEntity();
             entity1.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
             entity2.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            var energySystem = new EnergySystem(10);
+            var energySystem = new EnergySystem() { DrainRate = 10 };
             // Act
             energySystem.Update(ecsEngine, 1.0f);
             // Assert
@@ -112,7 +110,7 @@ public class EnergySystemTest
                 var ecsEngine = new EcsEngine();
                 var entity = ecsEngine.CreateEntity();
                 entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                var energySystem = new EnergySystem(0);
+                var energySystem = new EnergySystem() { DrainRate = 0 };
                 // Act
                 energySystem.Update(ecsEngine, 1.0f);
                 // Assert
@@ -129,7 +127,7 @@ public class EnergySystemTest
                 var entity2 = ecsEngine.CreateEntity();
                 entity1.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
                 entity2.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                var energySystem = new EnergySystem(0);
+                var energySystem = new EnergySystem() { DrainRate = 0 };
                 // Act
                 energySystem.Update(ecsEngine, 1.0f);
                 // Assert
@@ -139,6 +137,5 @@ public class EnergySystemTest
                 Assert.Equal(50, energyComponent2.Energy);
             }
         }
-
     }
 }

@@ -7,6 +7,7 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
 {
     private readonly Random _random = new();
     public double ChanceOfInitialAcceleration = 0;
+    public double ChanceOfInitialVelocity = 1;
 
     public void SpawnEntity()
     {
@@ -35,8 +36,12 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
 
         entity.AddComponent(new VelocityComponent
         {
-            DX = (float)(_random.NextDouble() * 2 - 1), // Random value between -1 and 1
-            DY = (float)(_random.NextDouble() * 2 - 1)  // Random value between -1 and 1
+            DX = Random.Shared.NextDouble() < ChanceOfInitialVelocity
+                ? (float)(_random.NextDouble() * 2 - 1)
+                : 0, // Random value between -1 and 1 or 0
+            DY = Random.Shared.NextDouble() < ChanceOfInitialVelocity
+                ? (float)(_random.NextDouble() * 2 - 1)
+                : 0 // Random value between -1 and 1 or 0
         });
 
         entity.AddComponent(new AccelerationComponent

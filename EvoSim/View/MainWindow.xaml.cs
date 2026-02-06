@@ -11,13 +11,15 @@ namespace EvoSim.View;
 public partial class MainWindow : Window
 {
     private readonly SimulationEngine _simulation;
+    private readonly DispatcherTimer _simulationTimer;
+    private readonly Stopwatch _stopwatch;
+
     private readonly Renderer _renderer;
-    private readonly DispatcherTimer _timer;
+    private readonly DispatcherTimer _renderTimer;
 
     private const int _width = 800;
     private const int _height = 600;
-    private readonly Stopwatch _stopwatch;
-
+    
     public MainWindow()
     {
         InitializeComponent();
@@ -34,13 +36,17 @@ public partial class MainWindow : Window
         _renderer = new Renderer(bitmap, _width, _height);
 
         // Setup timer for game loop
-        _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) }; // ~60 FPS
-        _timer.Tick += OnSimulationTick;
+        _simulationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(32) };
+        _simulationTimer.Tick += OnSimulationTick;
+
+        _renderTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(32) }; // ~30 FPS
+        _renderTimer.Tick += OnRenderTick;
 
         // Initialize stopwatch for dynamic deltaTime
         _stopwatch = Stopwatch.StartNew();
 
-        _timer.Start();
+        _simulationTimer.Start();
+        _renderTimer.Start();
     }
 
     private void OnSimulationTick(object sender, EventArgs e)
@@ -49,8 +55,11 @@ public partial class MainWindow : Window
         var deltaTime = (float)_stopwatch.Elapsed.TotalSeconds;
         _stopwatch.Restart();
 
-        // Update simulation and render
         _simulation.Update(deltaTime);
+    }
+
+    private void OnRenderTick(object sender, EventArgs e)
+    {
         _renderer.Clear();
         _renderer.DrawEntities(_simulation.EcsEngine);
     }

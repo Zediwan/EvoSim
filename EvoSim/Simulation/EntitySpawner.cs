@@ -59,5 +59,11 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
                 ? (float)(_random.NextDouble() * 2 - 1)
                 : 0 // Random value between -1 and 1 or 0
         });
+
+        entity.AddComponent(new CombatComponent
+        {
+            Attack = _random.Next(100),
+            Defense = _random.Next(100)
+        });
     }
 }

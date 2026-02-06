@@ -3,6 +3,9 @@ using EvoSim.ECS.Core;
 
 namespace EvoSim.ECS.Components;
 
+/// <summary>
+/// Represents a component that provides combat-related attributes.
+/// </summary>
 public class CombatComponent : IComponent
 {
     private float _attack;

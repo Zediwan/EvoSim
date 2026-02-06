@@ -33,7 +33,7 @@ public partial class MainWindow : Window
         _simulation.InitializeEntities(10000);
 
         // Initialize renderer for drawing entities
-        _renderer = new Renderer(bitmap, _width, _height);
+        _renderer = new Renderer(bitmap);
 
         // Setup timer for game loop
         _simulationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(32) };

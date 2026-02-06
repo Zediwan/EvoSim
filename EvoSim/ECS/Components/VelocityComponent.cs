@@ -12,19 +12,6 @@ namespace EvoSim.ECS.Components;
 /// performance-sensitive comparisons, as it avoids the computational cost of calculating a square root.</remarks>
 public class VelocityComponent : IComponent
 {
-    private float _maxVelocity;
-    /// <summary>
-    /// Gets or sets the maximum velocity allowed for the object.
-    /// </summary>
-    public float MaxVelocity
-    {
-        get => _maxVelocity;
-        set
-        {
-            Debug.Assert(value >= 0, $"{nameof(MaxVelocity)} ({MaxVelocity}) must be non-negative.");
-            _maxVelocity = Math.Max(value, 0);
-        }
-    }
     /// <summary>
     /// Gets or sets the horizontal displacement value.
     /// </summary>

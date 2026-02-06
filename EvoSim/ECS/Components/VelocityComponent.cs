@@ -47,6 +47,11 @@ public class VelocityComponent : IComponent
     /// Rather use <see cref="TotalVelocitySquared"/> when comparing velocities, to avoid the computational cost of a square root operation.
     /// </remarks>
     public float TotalVelocity => (float)Math.Sqrt(TotalVelocitySquared);
+
+    /// <summary>
+    /// Gets a value indicating whether the object has a non-zero velocity.
+    /// </summary>
+    public bool HasVelocity => VX != 0 || VY != 0;
 }
 
 

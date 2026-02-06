@@ -14,7 +14,11 @@ public class VelocitySystem : ISystem
 
         foreach (var entity in world.GetEntitiesWith(typeof(VelocityComponent), typeof(PositionComponent)))
         {
-            VelocityUtility.ApplyVelocityToPosition(entity, deltaTime);
+            VelocityUtility.ApplyVelocityToPosition(
+                entity.GetComponent<PositionComponent>(),
+                entity.GetComponent<VelocityComponent>(), 
+                deltaTime
+                );
         }
     }
 }

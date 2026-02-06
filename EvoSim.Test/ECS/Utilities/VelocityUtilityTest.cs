@@ -21,7 +21,7 @@ public class VelocityUtilityTest
             var expectedX = position.X + (int)velocity.VX; // 10 + 5 = 15
             var expectedY = position.Y + (int)velocity.VY; // 20 - 3 = 17
             // Act
-            VelocityUtility.ApplyVelocityToPosition(entity);
+            VelocityUtility.ApplyVelocityToPosition(entity, 1);
             // Assert
             Assert.Equal(expectedX, position.X);
             Assert.Equal(expectedY, position.Y);
@@ -36,7 +36,7 @@ public class VelocityUtilityTest
             var expectedX = position.X; // 10
             var expectedY = position.Y; // 20
             // Act
-            VelocityUtility.ApplyVelocityToPosition(position, velocity);
+            VelocityUtility.ApplyVelocityToPosition(position, velocity, 1);
             // Assert
             Assert.Equal(expectedX, position.X);
             Assert.Equal(expectedY, position.Y);
@@ -55,7 +55,7 @@ public class VelocityUtilityTest
                 var expectedX = position.X; // 10
                 var expectedY = position.Y; // 20
                 // Act
-                VelocityUtility.ApplyVelocityToPosition(entity);
+                VelocityUtility.ApplyVelocityToPosition(entity, 1);
                 // Assert
                 Assert.Equal(expectedX, position.X);
                 Assert.Equal(expectedY, position.Y);
@@ -70,7 +70,7 @@ public class VelocityUtilityTest
                 var velocity = new VelocityComponent { VX = 5.5f, VY = -3.2f };
                 entity.AddComponent(velocity);
                 // Act & Assert
-                VelocityUtility.ApplyVelocityToPosition(entity);
+                VelocityUtility.ApplyVelocityToPosition(entity, 1);
             }
 
             [SkippableFact]
@@ -80,7 +80,7 @@ public class VelocityUtilityTest
                 var ecsEngine = new EcsEngine();
                 var entity = ecsEngine.CreateEntity();
                 // Act & Assert
-                VelocityUtility.ApplyVelocityToPosition(entity);
+                VelocityUtility.ApplyVelocityToPosition(entity, 1);
             }
         }
     }

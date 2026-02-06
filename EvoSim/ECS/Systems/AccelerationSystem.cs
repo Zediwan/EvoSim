@@ -1,13 +1,13 @@
-﻿using System.Diagnostics;
-using EvoSim.ECS.Components;
+﻿using EvoSim.ECS.Components;
 using EvoSim.ECS.Core;
 using EvoSim.ECS.Utilities;
+using System.Diagnostics;
 
 namespace EvoSim.ECS.Systems;
 
 public class AccelerationSystem : ISystem
 {
-    private const int MaxRotationAngle = 45; // degrees
+    private const int MaxRotationAngle = 90; // degrees
 
     public void Update(EcsEngine ecsEngine, float deltaTime)
     {

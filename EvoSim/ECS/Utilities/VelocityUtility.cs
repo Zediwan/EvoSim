@@ -18,9 +18,9 @@ public static class VelocityUtility
     /// <remarks>This method applies the velocity of the entity to its position. If the entity does not have both a
     /// <see cref="PositionComponent"/> and a <see cref="VelocityComponent"/>, the method will return without making any
     /// changes.</remarks>
-    /// <param name="entity">The entity whose position will be updated. The entity must have both a <see cref="PositionComponent"/> and a <see
-    /// cref="VelocityComponent"/>.</param>
-    public static void ApplyVelocityToPosition(Entity entity)
+    /// <param name="entity">The entity whose position will be updated. The entity must have both a <see cref="PositionComponent"/> and a <see cref="VelocityComponent"/>.</param>
+    /// <param name="deltaTime">Time that has passed since the last update.</param>
+    public static void ApplyVelocityToPosition(Entity entity, float deltaTime)
     {
         Debug.Assert(entity.HasComponent<PositionComponent>(),
             $"Entity {entity.Id} does not have a {nameof(PositionComponent)}.");
@@ -30,7 +30,7 @@ public static class VelocityUtility
         if (!entity.HasComponent<PositionComponent>()) return;
         if (!entity.HasComponent<VelocityComponent>()) return;
 
-        ApplyVelocityToPosition(entity.GetComponent<PositionComponent>(), entity.GetComponent<VelocityComponent>());
+        ApplyVelocityToPosition(entity.GetComponent<PositionComponent>(), entity.GetComponent<VelocityComponent>(), deltaTime);
     }
 
     /// <summary>
@@ -40,13 +40,14 @@ public static class VelocityUtility
     /// integer values to the position.</remarks>
     /// <param name="positionComponent">The position component representing the current coordinates of the entity.</param>
     /// <param name="velocityComponent">The velocity component representing the movement vector of the entity.</param>
-    public static void ApplyVelocityToPosition(PositionComponent positionComponent, VelocityComponent velocityComponent)
+    /// <param name="deltaTime">Time that has passed since the last update.</param>
+    public static void ApplyVelocityToPosition(PositionComponent positionComponent, VelocityComponent velocityComponent, float deltaTime)
     {
         if (velocityComponent.TotalVelocitySquared == 0) return; // No movement if velocity is zero
 
         // TODO: add max velocity limit based on entity traits
 
-        positionComponent.X += (int)velocityComponent.VX;
-        positionComponent.Y += (int)velocityComponent.VY;
+        positionComponent.X += (int)(velocityComponent.VX * deltaTime);
+        positionComponent.Y += (int)(velocityComponent.VY * deltaTime);
     }
 }

@@ -21,6 +21,11 @@ public class VelocityComponent : IComponent
     /// </summary>
     public float VY { get; set; }
 
+        /// <summary>
+            /// Gets or sets the maximum velocity magnitude that this object can achieve.
+                /// </summary>
+                    public float MaxVelocity { get; set; }
+
     /// <summary>
     /// Gets the squared magnitude of the total velocity, calculated as the sum of the squares of the X and Y velocity
     /// components.
@@ -40,5 +45,6 @@ public class VelocityComponent : IComponent
     /// </summary>
     public bool HasVelocity => VX != 0 || VY != 0; // TODO: consider a small epsilon for floating-point precision
 }
+
 
 

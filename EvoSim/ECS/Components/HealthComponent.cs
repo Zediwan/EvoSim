@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using EvoSim.ECS.Core;
+﻿using EvoSim.ECS.Core;
+using System.Diagnostics;
 
 namespace EvoSim.ECS.Components;
 
@@ -41,6 +41,7 @@ public class HealthComponent : IComponent
             Debug.Assert(value >= 0, $"{nameof(MaxHealth)} ({MaxHealth}) cannot be negative.");
 
             _maxHealth = Math.Max(0, value);
+            // TODO: define if setting max Health should clamp current health or not.
             Health = Math.Min(Health, MaxHealth); // Ensure current health does not exceed new max health
         }
     }

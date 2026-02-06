@@ -11,9 +11,9 @@ public class PositionUtilityTest
         public void Should_NotWraparound_When_InsideBounds()
         {
             // Arrange
-            var positionComponent = new PositionComponent{X = 50, Y = 50};
-            var worldWidth = 100;
-            var worldHeight = 100;
+            var positionComponent = new PositionComponent { X = 50, Y = 50 };
+            const int worldWidth = 100;
+            const int worldHeight = 100;
             // Act
             PositionUtility.ApplyWraparound(positionComponent, worldWidth, worldHeight);
             // Assert
@@ -30,9 +30,9 @@ public class PositionUtilityTest
         public void Should_Wraparound_When_OutsideBounds(int x, int y, int expectedX, int expectedY)
         {
             // Arrange
-            var positionComponent = new PositionComponent{X = x, Y = y};
-            var worldWidth = 100;
-            var worldHeight = 100;
+            var positionComponent = new PositionComponent { X = x, Y = y };
+            const int worldWidth = 100;
+            const int worldHeight = 100;
             // Act
             PositionUtility.ApplyWraparound(positionComponent, worldWidth, worldHeight);
             // Assert
@@ -54,7 +54,7 @@ public class PositionUtilityTest
             [InlineData(0, 100, 0, -10)] // Invalid world height (0), negative out of bounds y but skip wraparound
             [InlineData(0, 100, 0, 110)] // Invalid world height (0), positive out of bounds y but skip wraparound
             [InlineData(0, 0, 0, 0)] // Invalid world width and height (0), no wraparound
-            [InlineData(0, 0,-10, 0)] // Invalid world width and height (0), negative out of bounds x but skip wraparound
+            [InlineData(0, 0, -10, 0)] // Invalid world width and height (0), negative out of bounds x but skip wraparound
             [InlineData(0, 0, 10, 0)] // Invalid world width and height (0), positive out of bounds x but skip wraparound
             [InlineData(0, 0, 0, -10)] // Invalid world width and height (0), negative out of bounds y but skip wraparound
             [InlineData(0, 0, 0, 10)] // Invalid world width and height (0), positive out of bounds y but skip wraparound

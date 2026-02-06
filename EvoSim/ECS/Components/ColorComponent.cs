@@ -8,7 +8,7 @@ namespace EvoSim.ECS.Components;
 public class ColorComponent : IComponent
 {
     /// <summary>
-    /// Gets or sets the red component of the color, represented as a value between 0 and 255..
+    /// Gets or sets the red component of the color, represented as a value between 0 and 255.
     /// </summary>
     public byte R { get; set; }
     /// <summary>
@@ -16,7 +16,7 @@ public class ColorComponent : IComponent
     /// </summary>
     public byte G { get; set; }
     /// <summary>
-    /// Gets or sets the value of the byte property, represented as a value between 0 and 255..
+    /// Gets or sets the value of the byte property, represented as a value between 0 and 255.
     /// </summary>
     public byte B { get; set; }
     /// <summary>

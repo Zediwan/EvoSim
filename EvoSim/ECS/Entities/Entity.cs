@@ -2,46 +2,33 @@
 
 namespace EvoSim.ECS.Entities;
 
-public class Entity
+public class Entity(int id)
 {
-    #region Constants and Statics
-
-    #endregion
-
     #region Variables and Properties
-    public int Id { get; }
-    private Dictionary<Type, IComponent> _Components = new ();
-    #endregion
-
-    #region Constructors and Destructors
-
-    public Entity(int id)
-    {
-        Id = id;
-    }
-
+    public int Id { get; } = id;
+    private readonly Dictionary<Type, IComponent> _components = new();
     #endregion
 
     #region Methods
 
     public void AddComponent<T>(T component) where T : IComponent
     {
-        _Components[typeof(T)] = component;
+        _components[typeof(T)] = component;
     }
 
     public T GetComponent<T>() where T : IComponent
     {
-        return (T)_Components[typeof(T)];
+        return (T)_components[typeof(T)];
     }
 
     public bool HasComponent<T>() where T : IComponent
     {
-        return _Components.ContainsKey(typeof(T));
+        return _components.ContainsKey(typeof(T));
     }
 
     public bool HasComponents(params Type[] componentTypes)
     {
-        return componentTypes.All(type => _Components.ContainsKey(type));
+        return componentTypes.All(type => _components.ContainsKey(type));
     }
 
     #endregion

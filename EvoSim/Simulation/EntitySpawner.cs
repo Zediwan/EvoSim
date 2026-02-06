@@ -1,11 +1,19 @@
-﻿using EvoSim.ECS.Core;
-using EvoSim.ECS.Components;
+﻿using EvoSim.ECS.Components;
+using EvoSim.ECS.Core;
 
 namespace EvoSim.Simulation;
 
 public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
 {
     private readonly Random _random = new();
+    public double ChanceOfInitialAcceleration = .5;
+    public double ChanceOfInitialVelocity = 1;
+    public int ColorRangeMinR = 0;
+    public int ColorRangeMaxR = 256;
+    public int ColorRangeMinG = 0;
+    public int ColorRangeMaxG = 256;
+    public int ColorRangeMinB = 0;
+    public int ColorRangeMaxB = 256;
 
     public void SpawnEntity()
     {
@@ -25,24 +33,37 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
             Y = _random.Next(height)
         });
 
-        entity.AddComponent(new ColorComponent()
+        entity.AddComponent(new ColorComponent
         {
-            R = (byte)_random.Next(256),
-            G = (byte)_random.Next(256),
-            B = (byte)_random.Next(256)
+            R = (byte)_random.Next(ColorRangeMinR, ColorRangeMaxR),
+            G = (byte)_random.Next(ColorRangeMinG, ColorRangeMaxG),
+            B = (byte)_random.Next(ColorRangeMinB, ColorRangeMaxB)
         });
 
         entity.AddComponent(new VelocityComponent
         {
-            DX = (float)(_random.NextDouble() * 2 - 1), // Random value between -1 and 1
-            DY = (float)(_random.NextDouble() * 2 - 1)  // Random value between -1 and 1
+            VX = Random.Shared.NextDouble() < ChanceOfInitialVelocity
+                ? (float)(_random.NextDouble() * 2 - 1)
+                : 0, // Random value between -1 and 1 or 0
+            VY = Random.Shared.NextDouble() < ChanceOfInitialVelocity
+                ? (float)(_random.NextDouble() * 2 - 1)
+                : 0 // Random value between -1 and 1 or 0
         });
 
         entity.AddComponent(new AccelerationComponent
         {
-            AX = (float)(_random.NextDouble() * 2 - 1), // Random value between -1 and 1
-            AY = (float)(_random.NextDouble() * 2 - 1)  // Random value between -1 and 1
+            AX = Random.Shared.NextDouble() < ChanceOfInitialAcceleration
+                ? (float)(_random.NextDouble() * 2 - 1)
+                : 0, // Random value between -1 and 1 or 0
+            AY = Random.Shared.NextDouble() < ChanceOfInitialAcceleration
+                ? (float)(_random.NextDouble() * 2 - 1)
+                : 0 // Random value between -1 and 1 or 0
         });
 
+        entity.AddComponent(new CombatComponent
+        {
+            Attack = _random.Next(100),
+            Defense = _random.Next(100)
+        });
     }
 }

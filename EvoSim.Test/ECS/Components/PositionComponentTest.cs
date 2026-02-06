@@ -9,8 +9,8 @@ public class PositionComponentTest
     public void PositionComponent_Initialization_Works()
     {
         // Arrange
-        var x = 10;
-        var y = 20;
+        const int x = 10;
+        const int y = 20;
         // Act
         var positionComponent = new PositionComponent { X = x, Y = y };
         // Assert
@@ -33,8 +33,8 @@ public class PositionComponentTest
     {
         // Arrange
         var positionComponent = new PositionComponent();
-        var newX = 15;
-        var newY = 25;
+        const int newX = 15;
+        const int newY = 25;
         // Act
         positionComponent.X = newX;
         positionComponent.Y = newY;

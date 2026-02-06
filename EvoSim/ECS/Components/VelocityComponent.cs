@@ -1,33 +1,44 @@
 ﻿using EvoSim.ECS.Core;
+using System.Diagnostics;
 
 namespace EvoSim.ECS.Components;
 
 /// <summary>
-/// Represents a velocity component with horizontal and vertical displacement values.
+/// Represents a velocity component that defines the horizontal and vertical displacement values, as well as the maximum
+/// velocity constraints for an object.
 /// </summary>
-/// <remarks>This class provides properties to define the horizontal (<see cref="DX"/>) and vertical (<see
-/// cref="DY"/>)  components of velocity, as well as calculated properties for the total velocity magnitude  (<see
-/// cref="TotalVelocity"/>) and its squared value (<see cref="TotalVelocitySquared"/>).</remarks>
+/// <remarks>This component provides properties to manage and calculate velocity-related values, including the
+/// total velocity and its squared magnitude. The <see cref="TotalVelocitySquared"/> property is recommended for
+/// performance-sensitive comparisons, as it avoids the computational cost of calculating a square root.</remarks>
 public class VelocityComponent : IComponent
 {
+    private float _maxVelocity;
     /// <summary>
-    /// Gets or sets the maximum velocity, in units per second, that an object can achieve.
+    /// Gets or sets the maximum velocity allowed for the object.
     /// </summary>
-    public float MaxVelocity { get; set; }
+    public float MaxVelocity
+    {
+        get => _maxVelocity;
+        set
+        {
+            Debug.Assert(value >= 0, $"{nameof(MaxVelocity)} ({MaxVelocity}) must be non-negative.");
+            _maxVelocity = Math.Max(value, 0);
+        }
+    }
     /// <summary>
     /// Gets or sets the horizontal displacement value.
     /// </summary>
-    public float DX { get; set; }
+    public float VX { get; set; }
     /// <summary>
     /// Gets or sets the vertical displacement value.
     /// </summary>
-    public float DY { get; set; }
+    public float VY { get; set; }
 
     /// <summary>
     /// Gets the squared magnitude of the total velocity, calculated as the sum of the squares of the X and Y velocity
     /// components.
     /// </summary>
-    public float TotalVelocitySquared => DX * DX + DY * DY;
+    public float TotalVelocitySquared => VX * VX + VY * VY;
 
     /// <summary>
     /// Gets the total velocity as a single scalar value.

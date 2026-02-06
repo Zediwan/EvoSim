@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using EvoSim.ECS.Components;
+﻿using EvoSim.ECS.Components;
 using EvoSim.ECS.Entities;
+using System.Diagnostics;
 
 namespace EvoSim.ECS.Utilities;
 
@@ -13,26 +13,41 @@ namespace EvoSim.ECS.Utilities;
 public static class VelocityUtility
 {
     /// <summary>
-    /// Updates the position of the specified entity by applying its velocity.
+    /// Updates the position of the specified entity based on its velocity.
     /// </summary>
-    /// <remarks>This method adjusts the position of the entity based on its velocity. If the entity does not
-    /// have the required components, the method will return without making any changes.</remarks>
-    /// <param name="entity">The entity whose position will be updated. The entity must have both a <see cref="PositionComponent"/> and a
-    /// <see cref="VelocityComponent"/>.</param>
-    public static void ApplyVelocityToPosition(Entity entity)
+    /// <remarks>This method applies the velocity of the entity to its position. If the entity does not have both a
+    /// <see cref="PositionComponent"/> and a <see cref="VelocityComponent"/>, the method will return without making any
+    /// changes.</remarks>
+    /// <param name="entity">The entity whose position will be updated. The entity must have both a <see cref="PositionComponent"/> and a <see cref="VelocityComponent"/>.</param>
+    /// <param name="deltaTime">Time that has passed since the last update.</param>
+    public static void ApplyVelocityToPosition(Entity entity, float deltaTime)
     {
-        Debug.Assert(entity.HasComponent<PositionComponent>(), $"Entity {entity.Id} does not have a {nameof(PositionComponent)}.");
-        Debug.Assert(entity.HasComponent<VelocityComponent>(), $"Entity {entity.Id} does not have a {nameof(VelocityComponent)}.");
-        
+        Debug.Assert(entity.HasComponent<PositionComponent>(),
+            $"Entity {entity.Id} does not have a {nameof(PositionComponent)}.");
+        Debug.Assert(entity.HasComponent<VelocityComponent>(),
+            $"Entity {entity.Id} does not have a {nameof(VelocityComponent)}.");
+
         if (!entity.HasComponent<PositionComponent>()) return;
         if (!entity.HasComponent<VelocityComponent>()) return;
 
-        var positionComponent = entity.GetComponent<PositionComponent>();
-        var velocityComponent = entity.GetComponent<VelocityComponent>();
+        ApplyVelocityToPosition(entity.GetComponent<PositionComponent>(), entity.GetComponent<VelocityComponent>(), deltaTime);
+    }
+
+    /// <summary>
+    /// Updates the position of an entity based on its velocity.
+    /// </summary>
+    /// <remarks>If the velocity is zero, the position remains unchanged. The method applies the velocity as
+    /// integer values to the position.</remarks>
+    /// <param name="positionComponent">The position component representing the current coordinates of the entity.</param>
+    /// <param name="velocityComponent">The velocity component representing the movement vector of the entity.</param>
+    /// <param name="deltaTime">Time that has passed since the last update.</param>
+    public static void ApplyVelocityToPosition(PositionComponent positionComponent, VelocityComponent velocityComponent, float deltaTime)
+    {
+        if (velocityComponent.TotalVelocitySquared == 0) return; // No movement if velocity is zero
 
         // TODO: add max velocity limit based on entity traits
 
-        positionComponent.X += (int) velocityComponent.DX;
-        positionComponent.Y += (int) velocityComponent.DY;
+        positionComponent.X += (int)(velocityComponent.VX * deltaTime);
+        positionComponent.Y += (int)(velocityComponent.VY * deltaTime);
     }
 }

@@ -1,4 +1,4 @@
-﻿<Window x:Class="EvoSim.MainWindow"
+﻿<Window x:Class="EvoSim.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="EvoSim" Height="600" Width="800">

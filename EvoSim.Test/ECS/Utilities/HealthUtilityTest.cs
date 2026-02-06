@@ -9,13 +9,13 @@ public class HealthUtilityTest
     public class TakeDamageTest()
     {
         [Fact]
-        public void Should_TakeDamage_When_ValidParameters()
+        public void Should_TakeDamage_When_EntityHasAllComponents()
         {
             // Arrange
             var ecsEngine = new EcsEngine();
             var entity = ecsEngine.CreateEntity();
             entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            float damageToTake = 10;
+            const float damageToTake = 10;
             // Act
             HealthUtility.TakeDamage(entity, damageToTake);
             // Assert
@@ -24,33 +24,39 @@ public class HealthUtilityTest
         }
 
         [Fact]
+        public void Should_TakeDamage_When_ValidParameters()
+        {
+            // Arrange
+            var health = new HealthComponent(maxHealth: 100, health: 50);
+            const float damageToTake = 10;
+            // Act
+            HealthUtility.TakeDamage(health, damageToTake);
+            // Assert
+            Assert.Equal(40, health.Health);
+        }
+
+        [Fact]
         public void Should_NotTakeDamage_When_AmountIsZero()
         {
             // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            float damageToTake = 0;
+            var health = new HealthComponent(maxHealth: 100, health: 50);
+            const float damageToTake = 0;
             // Act
-            HealthUtility.TakeDamage(entity, damageToTake);
+            HealthUtility.TakeDamage(health, damageToTake);
             // Assert
-            var healthComponent = entity.GetComponent<HealthComponent>();
-            Assert.Equal(50, healthComponent.Health);
+            Assert.Equal(50, health.Health);
         }
 
         [Fact]
         public void Should_SetHealthToZero_When_DamageExceedsCurrentHealth()
         {
             // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            float damageToTake = 60;
+            var health = new HealthComponent(maxHealth: 100, health: 50);
+            const float damageToTake = 60;
             // Act
-            HealthUtility.TakeDamage(entity, damageToTake);
+            HealthUtility.TakeDamage(health, damageToTake);
             // Assert
-            var healthComponent = entity.GetComponent<HealthComponent>();
-            Assert.Equal(0, healthComponent.Health);
+            Assert.Equal(0, health.Health);
         }
 
         public class ReleaseTests() : ReleaseTest
@@ -59,15 +65,12 @@ public class HealthUtilityTest
             public void Should_NotTakeDamage_When_AmountIsNegative()
             {
                 // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-                float damageToTake = -10;
+                var health = new HealthComponent(maxHealth: 100, health: 50);
+                const float damageToTake = -10;
                 // Act
-                HealthUtility.TakeDamage(entity, damageToTake);
+                HealthUtility.TakeDamage(health, damageToTake);
                 // Assert
-                var healthComponent = entity.GetComponent<HealthComponent>();
-                Assert.Equal(50, healthComponent.Health);
+                Assert.Equal(50, health.Health);
             }
 
             [SkippableFact]
@@ -76,11 +79,23 @@ public class HealthUtilityTest
                 // Arrange
                 var ecsEngine = new EcsEngine();
                 var entity = ecsEngine.CreateEntity();
-                float damageToTake = 10;
+                const float damageToTake = 10;
                 // Act
                 HealthUtility.TakeDamage(entity, damageToTake);
                 // Assert
                 Assert.False(entity.HasComponent<HealthComponent>());
+            }
+
+            [SkippableFact]
+            public void Should_NotTakeDamage_When_HealthComponentIsDead()
+            {
+                // Arrange
+                var health = new HealthComponent(maxHealth: 100, health: 0);
+                const float damageToTake = 10;
+                // Act
+                HealthUtility.TakeDamage(health, damageToTake);
+                // Assert
+                Assert.Equal(0, health.Health);
             }
         }
     }
@@ -94,7 +109,7 @@ public class HealthUtilityTest
             var ecsEngine = new EcsEngine();
             var entity = ecsEngine.CreateEntity();
             entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            float amountToHeal = 20;
+            const float amountToHeal = 20;
             // Act
             HealthUtility.Heal(entity, amountToHeal);
             // Assert
@@ -109,7 +124,7 @@ public class HealthUtilityTest
             var ecsEngine = new EcsEngine();
             var entity = ecsEngine.CreateEntity();
             entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            float amountToHeal = 0;
+            const float amountToHeal = 0;
             // Act
             HealthUtility.Heal(entity, amountToHeal);
             // Assert
@@ -124,7 +139,7 @@ public class HealthUtilityTest
             var ecsEngine = new EcsEngine();
             var entity = ecsEngine.CreateEntity();
             entity.AddComponent(new HealthComponent(maxHealth: 100, health: 90));
-            float amountToHeal = 20;
+            const float amountToHeal = 20;
             // Act
             HealthUtility.Heal(entity, amountToHeal);
             // Assert
@@ -141,7 +156,7 @@ public class HealthUtilityTest
                 var ecsEngine = new EcsEngine();
                 var entity = ecsEngine.CreateEntity();
                 entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-                float amountToHeal = -10;
+                const float amountToHeal = -10;
                 // Act
                 HealthUtility.Heal(entity, amountToHeal);
                 // Assert
@@ -155,7 +170,7 @@ public class HealthUtilityTest
                 // Arrange
                 var ecsEngine = new EcsEngine();
                 var entity = ecsEngine.CreateEntity();
-                float amountToHeal = 10;
+                const float amountToHeal = 10;
                 // Act
                 HealthUtility.Heal(entity, amountToHeal);
                 // Assert
@@ -174,7 +189,7 @@ public class HealthUtilityTest
             var entity = ecsEngine.CreateEntity();
             entity.AddComponent(new HealthComponent(maxHealth: 100, health: 0));
             // Act
-            bool isDead = !entity.GetComponent<HealthComponent>().IsAlive;
+            var isDead = !entity.GetComponent<HealthComponent>().IsAlive;
             // Assert
             Assert.True(isDead);
         }
@@ -186,7 +201,7 @@ public class HealthUtilityTest
             var entity = ecsEngine.CreateEntity();
             entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
             // Act
-            bool isDead = !entity.GetComponent<HealthComponent>().IsAlive;
+            var isDead = !entity.GetComponent<HealthComponent>().IsAlive;
             // Assert
             Assert.False(isDead);
         }

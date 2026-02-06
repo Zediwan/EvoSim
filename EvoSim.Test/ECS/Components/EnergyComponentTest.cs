@@ -10,7 +10,8 @@ public class EnergyComponentTest
         public void Should_InitializeWithCorrectValues()
         {
             // Arrange
-            float energy = 10, maxEnergy = 20;
+            const float energy = 10;
+            const float maxEnergy = 20;
 
             // Act
             var energyComponent = new EnergyComponent(maxEnergy: maxEnergy, energy: energy);

@@ -1,4 +1,5 @@
 ﻿using EvoSim.ECS.Core;
+using System.Diagnostics;
 
 namespace EvoSim.ECS.Components;
 
@@ -9,10 +10,19 @@ namespace EvoSim.ECS.Components;
 /// acceleration components along the X and Y axes, as well as the total acceleration magnitude.</remarks>
 public class AccelerationComponent : IComponent
 {
+    private float _maxAcceleration;
     /// <summary>
-    /// Gets or sets the maximum acceleration value for the object.
+    /// Gets or sets the maximum acceleration value.
     /// </summary>
-    public float MaxAcceleration { get; set; }
+    public float MaxAcceleration
+    {
+        get => _maxAcceleration;
+        set
+        {
+            Debug.Assert(value >= 0, $"{nameof(MaxAcceleration)} ({value}) must be non-negative.");
+            _maxAcceleration = Math.Max(value, 0);
+        }
+    }
     /// <summary>
     /// Gets or sets the X-Axis acceleration of the object's position in a 2D space.
     /// </summary>

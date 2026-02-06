@@ -19,7 +19,7 @@ public class HealthComponentTest
             Assert.Equal(health, healthComponent.Health);
             Assert.Equal(maxHealth, healthComponent.MaxHealth);
         }
-        
+
         public class ReleaseTests : ReleaseTest
         {
             // Empty for future extension
@@ -81,7 +81,7 @@ public class HealthComponentTest
             // Assert
             Assert.Equal(5, healthComponent.Health);
         }
-        
+
         public class ReleaseTests : ReleaseTest
         {
             [SkippableFact]

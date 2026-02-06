@@ -6,8 +6,13 @@ namespace EvoSim.Simulation;
 public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
 {
     private readonly Random _random = new();
-    public double ChanceOfInitialAcceleration = .5;
-    public double ChanceOfInitialVelocity = 1;
+
+    public float ChanceOfInitialAcceleration = 0.5f;
+    public float InitialAcceleration = 1;
+
+    public float ChanceOfInitialVelocity = 1;
+    public float InitialVelocity = 10;
+    
     public int ColorRangeMinR = 0;
     public int ColorRangeMaxR = 256;
     public int ColorRangeMinG = 0;
@@ -43,21 +48,21 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
         entity.AddComponent(new VelocityComponent
         {
             VX = Random.Shared.NextDouble() < ChanceOfInitialVelocity
-                ? (float)(_random.NextDouble() * 2 - 1)
-                : 0, // Random value between -1 and 1 or 0
+                ? (float)(_random.NextDouble() - 0.5) * InitialVelocity
+                : 0,
             VY = Random.Shared.NextDouble() < ChanceOfInitialVelocity
-                ? (float)(_random.NextDouble() * 2 - 1)
-                : 0 // Random value between -1 and 1 or 0
+                ? (float)(_random.NextDouble() - 0.5) * InitialVelocity
+                : 0
         });
 
         entity.AddComponent(new AccelerationComponent
         {
             AX = Random.Shared.NextDouble() < ChanceOfInitialAcceleration
-                ? (float)(_random.NextDouble() * 2 - 1)
-                : 0, // Random value between -1 and 1 or 0
+                ? (float)(_random.NextDouble() - 0.5) * InitialAcceleration
+                : 0,
             AY = Random.Shared.NextDouble() < ChanceOfInitialAcceleration
-                ? (float)(_random.NextDouble() * 2 - 1)
-                : 0 // Random value between -1 and 1 or 0
+                ? (float)(_random.NextDouble() - 0.5) * InitialAcceleration
+                : 0 
         });
 
         entity.AddComponent(new CombatComponent

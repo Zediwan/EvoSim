@@ -19,7 +19,7 @@ public class AccelerationComponent : IComponent
         get => _maxAcceleration;
         set
         {
-            Debug.Assert(value >= 0, $"{nameof(MaxAcceleration)} ({MaxAcceleration}) must be non-negative.");
+            Debug.Assert(value >= 0, $"{nameof(MaxAcceleration)} ({value}) must be non-negative.");
             _maxAcceleration = Math.Max(value, 0);
         }
     }

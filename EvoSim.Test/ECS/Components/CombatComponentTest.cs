@@ -20,6 +20,7 @@ public class CombatComponentTest
             // Assert
             Assert.Equal(attack, component.Attack);
         }
+
         [Fact]
         public void Should_ClampToZero_When_SettingNegativeAttack()
         {
@@ -29,6 +30,15 @@ public class CombatComponentTest
                 // Act
                 Attack = -10
             };
+            // Assert
+            Assert.Equal(0, component.Attack);
+        }
+
+        [Fact]
+        public void Should_InitialiseDefault_When_NoAttackGiven()
+        {
+            // Arrange & Act
+            var component = new CombatComponent();
             // Assert
             Assert.Equal(0, component.Attack);
         }
@@ -50,6 +60,7 @@ public class CombatComponentTest
             // Assert
             Assert.Equal(defense, component.Defense);
         }
+
         [Fact]
         public void Should_ClampToZero_When_SettingNegativeDefense()
         {
@@ -59,6 +70,15 @@ public class CombatComponentTest
                 // Act
                 Defense = -10
             };
+            // Assert
+            Assert.Equal(0, component.Defense);
+        }
+
+        [Fact]
+        public void Should_InitialiseDefault_When_NoDefenseGiven()
+        {
+            // Arrange & Act
+            var component = new CombatComponent();
             // Assert
             Assert.Equal(0, component.Defense);
         }

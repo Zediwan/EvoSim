@@ -51,7 +51,7 @@ public class VelocityComponent : IComponent
     /// <summary>
     /// Gets a value indicating whether the object has a non-zero velocity.
     /// </summary>
-    public bool HasVelocity => VX != 0 || VY != 0;
+    public bool HasVelocity => VX != 0 || VY != 0; // TODO: consider a small epsilon for floating-point precision
 }
 
 

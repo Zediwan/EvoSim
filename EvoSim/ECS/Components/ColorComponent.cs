@@ -7,20 +7,30 @@ namespace EvoSim.ECS.Components;
 /// </summary>
 public class ColorComponent : IComponent
 {
+    public static ColorComponent White => new() { R = 255, G = 255, B = 255, A = 255 };
+
     /// <summary>
-    /// Gets or sets the red component of the color, represented as a value between 0 and 255.
+    /// Red component of the Color, represented as a value between 0 and 255.
     /// </summary>
-    public byte R { get; set; }
+    public byte R { get; set; } = 255;
+
     /// <summary>
-    /// Gets or sets the green component of a color, represented as a value between 0 and 255.
+    /// Green component of the Color, represented as a value between 0 and 255.
     /// </summary>
-    public byte G { get; set; }
+    public byte G { get; set; } = 255;
+
     /// <summary>
-    /// Gets or sets the value of the byte property, represented as a value between 0 and 255.
+    /// Blue component of the Color, represented as a value between 0 and 255.
     /// </summary>
-    public byte B { get; set; }
+    public byte B { get; set; } = 255;
+
+    /// <summary>
+    /// Alpha component of the Color, represented as a value between 0 and 255.
+    /// </summary>
+    public byte A { get; set; } = 255;
+
     /// <summary>
     /// Gets the color value as a 32-bit unsigned integer in ARGB format.
     /// </summary>
-    public uint ARGB => (uint)((255 << 24) | (R << 16) | (G << 8) | B);
+    public uint ARGB => (uint)((A << 24) | (R << 16) | (G << 8) | B);
 }

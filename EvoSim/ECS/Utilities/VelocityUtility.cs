@@ -29,21 +29,20 @@ public static class VelocityUtility
         positionComponent.Y += (int)(velocityComponent.VY * deltaTime);
     }
 
-        /// <summary>
-        /// Clamps the velocity to the maximum allowed value if MaxVelocity is set.
-        /// </summary>
-        /// <param name="velocityComponent">The velocity component to clamp.</param>
-        public static void ClampVelocityToMax(VelocityComponent velocityComponent)
-                {
-                    if (velocityComponent.MaxVelocity <= 0) return; // No clamping if MaxVelocity is not set
+    /// <summary>
+    /// Clamps the velocity to the maximum allowed value if MaxVelocity is set.
+    /// </summary>
+    /// <param name="velocityComponent">The velocity component to clamp.</param>
+    public static void ClampVelocityToMax(VelocityComponent velocityComponent)
+    {
+        if (velocityComponent.MaxVelocity <= 0) return; // No clamping if MaxVelocity is not set
 
-                    float currentSpeed = velocityComponent.TotalVelocity;
-                    if (currentSpeed > velocityComponent.MaxVelocity)
-                                {
-                                    float scale = velocityComponent.MaxVelocity / currentSpeed;
-                                    velocityComponent.VX *= scale;
-                                    velocityComponent.VY *= scale;
-                                }
-                }
-
+        float currentSpeed = velocityComponent.TotalVelocity;
+        if (currentSpeed > velocityComponent.MaxVelocity)
+        {
+            float scale = velocityComponent.MaxVelocity / currentSpeed;
+            velocityComponent.VX *= scale;
+            velocityComponent.VY *= scale;
+        }
+    }
 }

@@ -38,15 +38,16 @@ public partial class MainWindow : Window
         // Setup timer for game loop
         _simulationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(32) };
         _simulationTimer.Tick += OnSimulationTick;
+        _simulationTimer.Tick += OnRenderTick;
 
-        _renderTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(32) }; // ~30 FPS
-        _renderTimer.Tick += OnRenderTick;
+        //_renderTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(32) }; // ~30 FPS
+        //_renderTimer.Tick += OnRenderTick;
 
         // Initialize stopwatch for dynamic deltaTime
         _stopwatch = Stopwatch.StartNew();
 
         _simulationTimer.Start();
-        _renderTimer.Start();
+        //_renderTimer.Start();
     }
 
     private void OnSimulationTick(object sender, EventArgs e)

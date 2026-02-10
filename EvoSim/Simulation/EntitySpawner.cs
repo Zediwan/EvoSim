@@ -7,8 +7,8 @@ public class EntitySpawner(EcsEngine ecsEngine, int width, int height)
 {
     private readonly Random _random = new();
 
-    public float ChanceOfInitialAcceleration = 0.5f;
-    public float InitialAcceleration = 1;
+    public float ChanceOfInitialAcceleration = 1f;
+    public float InitialAcceleration = 10;
 
     public float ChanceOfInitialVelocity = 1;
     public float InitialVelocity = 10;

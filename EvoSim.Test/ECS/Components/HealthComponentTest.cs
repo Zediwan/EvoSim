@@ -4,137 +4,59 @@ namespace EvoSim.Test.ECS.Components;
 
 public class HealthComponentTest
 {
-    public class ConstructorTests
+    [Fact]
+    public void HealthTest()
     {
-        [Fact]
-        public void Should_InitializeWithCorrectValues()
-        {
-            // Arrange
-            int health = 10, maxHealth = 20;
+        // Arrange
+        var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
 
-            // Act
-            var healthComponent = new HealthComponent(maxHealth: maxHealth, health: health);
+        // Act
+        healthComponent.Health = -5;
 
-            // Assert
-            Assert.Equal(health, healthComponent.Health);
-            Assert.Equal(maxHealth, healthComponent.MaxHealth);
-        }
-
-        public class ReleaseTests : ReleaseTest
-        {
-            // Empty for future extension
-        }
+        // Assert
+        Assert.Equal(0, healthComponent.Health);
     }
 
-    public class SetterTests
+    [Theory]
+    [InlineData(10, 20, true)]
+    [InlineData(0, 20, false)]
+    [InlineData(-10, 20, false)]
+    public void IsAliveTest(int health, int maxHealth, bool expected)
     {
-        [Fact]
-        public void Should_AllowUpdatingValues()
+        // Arrange
+        var healthComponent = new HealthComponent(maxHealth: maxHealth, health: health);
+
+        // Act
+        var isAlive = healthComponent.IsAlive;
+
+        // Assert
+        Assert.Equal(expected, isAlive);
+    }
+
+    [Theory]
+    [InlineData(10, 20, null, 15, 10, 15)]
+    [InlineData(10, 20, null, 5, 5, 5)]
+    [InlineData(10, 20, null, -5, 0, 0)]
+    [InlineData(10, 20, 25, null, 20, 20)]
+    public void MaxHealthTest(int initialHealth, int initialMaxHealth, int? newHealth, int? newMaxHealth,
+        int expectedHealth, int expectedMaxHealth)
+    {
+        // Arrange
+        var healthComponent = new HealthComponent(maxHealth: initialMaxHealth, health: initialHealth);
+
+        // Act
+        if (newMaxHealth.HasValue)
         {
-            // Arrange
-            var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
-
-            // Act
-            healthComponent.MaxHealth = 25;
-            healthComponent.Health = 15;
-
-            // Assert
-            Assert.Equal(15, healthComponent.Health);
-            Assert.Equal(25, healthComponent.MaxHealth);
+            healthComponent.MaxHealth = newMaxHealth.Value;
         }
 
-        [Fact]
-        public void Should_BeAlive_WhenHealthIsPositive()
+        if (newHealth.HasValue)
         {
-            // Arrange
-            var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
-
-            // Act
-            var isAlive = healthComponent.IsAlive;
-
-            // Assert
-            Assert.True(isAlive);
+            healthComponent.Health = newHealth.Value;
         }
 
-        [Fact]
-        public void Should_NotBeAlive_WhenHealthIsZeroOrNegative()
-        {
-            // Arrange
-            var healthComponent = new HealthComponent(maxHealth: 20, health: 0);
-
-            // Act
-            var isAlive = healthComponent.IsAlive;
-
-            // Assert
-            Assert.False(isAlive);
-        }
-
-        [Fact]
-        public void Should_ClampHealth_When_MaxHealthSmallerThanHealth()
-        {
-            // Arrange
-            var healthComponent = new HealthComponent(maxHealth: 30, health: 20);
-
-            // Act
-            healthComponent.MaxHealth = 5;
-
-            // Assert
-            Assert.Equal(5, healthComponent.Health);
-        }
-
-        public class ReleaseTests : ReleaseTest
-        {
-            [SkippableFact]
-            public void Should_ClampHealth_When_NegativeHealth()
-            {
-                // Arrange
-                var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
-
-                // Act
-                healthComponent.Health = -5;
-
-                // Assert
-                Assert.Equal(0, healthComponent.Health);
-            }
-
-            [SkippableFact]
-            public void Should_ClampHealth_When_HealthExceedsMaxHealth()
-            {
-                // Arrange
-                var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
-
-                // Act
-                healthComponent.Health = 25;
-
-                // Assert
-                Assert.Equal(healthComponent.MaxHealth, healthComponent.Health);
-            }
-
-            [SkippableFact]
-            public void Should_NotBeAlive_WhenHealthIsNegative()
-            {
-                // Arrange
-                var healthComponent = new HealthComponent(maxHealth: 20, health: -1);
-
-                // Act
-                var isAlive = healthComponent.IsAlive;
-
-                // Assert
-                Assert.False(isAlive);
-            }
-
-            [SkippableFact]
-            public void Should_ClampMaxHealth_WhenNegative()
-            {
-                // Arrange
-                var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
-
-                // Act
-                healthComponent.MaxHealth = -5;
-
-                // Assert
-                Assert.Equal(0, healthComponent.MaxHealth);
-            }
-        }
+        // Assert
+        Assert.Equal(expectedHealth, healthComponent.Health);
+        Assert.Equal(expectedMaxHealth, healthComponent.MaxHealth);
     }
 }

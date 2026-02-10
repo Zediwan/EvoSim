@@ -4,24 +4,31 @@ namespace EvoSim.Test.ECS.Components;
 
 public class HealthComponentTest
 {
-    [Fact]
-    public void HealthTest()
+    [Theory]
+    [InlineData(10.0f, 20.0f, null, 15.0f, 10.0f, 15.0f)]
+    [InlineData(10.0f, 20.0f, null, 5.0f, 5.0f, 5.0f)]
+    [InlineData(10.0f, 20.0f, null, -5.0f, 0.0f, 0.0f)]
+    [InlineData(10.0f, 20.0f, 25.0f, null, 20.0f, 20.0f)]
+    public void MaxHealthTest(float initialHealth, float initialMaxHealth, float? newHealth, float? newMaxHealth,
+        float expectedHealth, float expectedMaxHealth)
     {
         // Arrange
-        var healthComponent = new HealthComponent(maxHealth: 20, health: 10);
+        var healthComponent = new HealthComponent(maxHealth: initialMaxHealth, health: initialHealth);
 
         // Act
-        healthComponent.Health = -5;
+        if (newMaxHealth.HasValue) healthComponent.MaxHealth = newMaxHealth.Value;
+        if (newHealth.HasValue) healthComponent.Health = newHealth.Value;
 
         // Assert
-        Assert.Equal(0, healthComponent.Health);
+        Assert.Equal(expectedHealth, healthComponent.Health);
+        Assert.Equal(expectedMaxHealth, healthComponent.MaxHealth);
     }
 
     [Theory]
-    [InlineData(10, 20, true)]
-    [InlineData(0, 20, false)]
-    [InlineData(-10, 20, false)]
-    public void IsAliveTest(int health, int maxHealth, bool expected)
+    [InlineData(10.0f, 20.0f, true)]
+    [InlineData(0.0f, 20.0f, false)]
+    [InlineData(-10.0f, 20.0f, false)]
+    public void IsAliveTest(float health, float maxHealth, bool expected)
     {
         // Arrange
         var healthComponent = new HealthComponent(maxHealth: maxHealth, health: health);
@@ -31,32 +38,5 @@ public class HealthComponentTest
 
         // Assert
         Assert.Equal(expected, isAlive);
-    }
-
-    [Theory]
-    [InlineData(10, 20, null, 15, 10, 15)]
-    [InlineData(10, 20, null, 5, 5, 5)]
-    [InlineData(10, 20, null, -5, 0, 0)]
-    [InlineData(10, 20, 25, null, 20, 20)]
-    public void MaxHealthTest(int initialHealth, int initialMaxHealth, int? newHealth, int? newMaxHealth,
-        int expectedHealth, int expectedMaxHealth)
-    {
-        // Arrange
-        var healthComponent = new HealthComponent(maxHealth: initialMaxHealth, health: initialHealth);
-
-        // Act
-        if (newMaxHealth.HasValue)
-        {
-            healthComponent.MaxHealth = newMaxHealth.Value;
-        }
-
-        if (newHealth.HasValue)
-        {
-            healthComponent.Health = newHealth.Value;
-        }
-
-        // Assert
-        Assert.Equal(expectedHealth, healthComponent.Health);
-        Assert.Equal(expectedMaxHealth, healthComponent.MaxHealth);
     }
 }

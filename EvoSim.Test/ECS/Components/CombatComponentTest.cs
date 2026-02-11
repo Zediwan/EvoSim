@@ -4,83 +4,37 @@ namespace EvoSim.Test.ECS.Components;
 
 public class CombatComponentTest
 {
-    public class AttackTests
+    [Theory]
+    [InlineData(null, 0.0f)]
+    [InlineData(0.0f, 0.0f)]
+    [InlineData(10.0f, 10.0f)]
+    [InlineData(-10.0f, 0.0f)]
+    public void AttackTest(float? attack, float expectedAttack)
     {
-        [Theory]
-        [InlineData(0)]
-        [InlineData(10)]
-        public void Should_SetCorrectly_When_SettingPositiveAttack(float attack)
-        {
-            // Arrange
-            var component = new CombatComponent
-            {
-                // Act
-                Attack = attack
-            };
-            // Assert
-            Assert.Equal(attack, component.Attack);
-        }
+        // Arrange
+        var component = new CombatComponent();
 
-        [Fact]
-        public void Should_ClampToZero_When_SettingNegativeAttack()
-        {
-            // Arrange
-            var component = new CombatComponent
-            {
-                // Act
-                Attack = -10
-            };
-            // Assert
-            Assert.Equal(0, component.Attack);
-        }
+        // Act
+        if (attack.HasValue) component.Attack = attack.Value;
 
-        [Fact]
-        public void Should_InitialiseDefault_When_NoAttackGiven()
-        {
-            // Arrange & Act
-            var component = new CombatComponent();
-            // Assert
-            Assert.Equal(0, component.Attack);
-        }
+        // Assert
+        Assert.Equal(expectedAttack, component.Attack);
     }
 
-    public class DefenseTests
+    [Theory]
+    [InlineData(null, 0.0f)]
+    [InlineData(0.0f, 0.0f)]
+    [InlineData(10.0f, 10.0f)]
+    [InlineData(-10.0f, 0.0f)]
+    public void DefenseTest(float? defense, float expectedDefense)
     {
-        [Theory]
-        [InlineData(0)]
-        [InlineData(10)]
-        public void Should_SetCorrectly_When_SettingPositiveDefense(float defense)
-        {
-            // Arrange
-            var component = new CombatComponent
-            {
-                // Act
-                Defense = defense
-            };
-            // Assert
-            Assert.Equal(defense, component.Defense);
-        }
+        // Arrange
+        var component = new CombatComponent();
 
-        [Fact]
-        public void Should_ClampToZero_When_SettingNegativeDefense()
-        {
-            // Arrange
-            var component = new CombatComponent
-            {
-                // Act
-                Defense = -10
-            };
-            // Assert
-            Assert.Equal(0, component.Defense);
-        }
+        // Act
+        if (defense.HasValue) component.Defense = defense.Value;
 
-        [Fact]
-        public void Should_InitialiseDefault_When_NoDefenseGiven()
-        {
-            // Arrange & Act
-            var component = new CombatComponent();
-            // Assert
-            Assert.Equal(0, component.Defense);
-        }
+        // Assert
+        Assert.Equal(expectedDefense, component.Defense);
     }
 }

@@ -7,14 +7,14 @@ namespace EvoSim.ECS.Systems;
 
 public class AccelerationSystem : ISystem
 {
-    private const int MaxRotationAngle = 90; // degrees
+    private const int MaxRotationAngle = 45; // degrees
 
     public void Update(EcsEngine ecsEngine, float deltaTime)
     {
         Debug.Assert(deltaTime >= 0, $"Delta time ({deltaTime}) cannot be negative.");
         if (deltaTime <= 0) return;
 
-        foreach (var entity in ecsEngine.GetEntitiesWith<AccelerationComponent>())
+        foreach (var entity in ecsEngine.GetEntitiesWith(typeof(AccelerationComponent), typeof(VelocityComponent)))
         {
             var accelerationComponent = entity.GetComponent<AccelerationComponent>();
 

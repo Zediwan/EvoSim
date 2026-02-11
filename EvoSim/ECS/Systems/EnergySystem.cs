@@ -7,12 +7,12 @@ namespace EvoSim.ECS.Systems;
 
 public class EnergySystem : ISystem
 {
-    private int _drainRate = 1;
+    private float _drainRate = 1;
 
     /// <summary>
     /// The rate at which energy is drained from entities per second. This value must be non-negative, and any attempt to set it to a negative value will be clamped to zero.
     /// </summary>
-    public int DrainRate
+    public float DrainRate
     {
         get => _drainRate;
         set

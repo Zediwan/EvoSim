@@ -21,10 +21,10 @@ public class AccelerationComponentTest
     }
 
     [Theory]
-    [InlineData(3, 4, 5)] // 3-4-5 triangle
-    [InlineData(5, 12, 13)] // 5-12-13 triangle
-    [InlineData(8, 15, 17)] // 8-15-17 triangle
-    [InlineData(0, 0, 0)] // Zero acceleration
+    [InlineData(3.0f, 4.0f, 5.0f)] // 3-4-5 triangle
+    [InlineData(5.0f, 12.0f, 13.0f)] // 5-12-13 triangle
+    [InlineData(8.0f, 15.0f, 17.0f)] // 8-15-17 triangle
+    [InlineData(0.0f, 0.0f, 0.0f)] // Zero acceleration
     public void TotalAccelerationTest(float ax, float ay, float expectedTotalAcceleration)
     {
         // Arrange
@@ -39,10 +39,10 @@ public class AccelerationComponentTest
     }
 
     [Theory]
-    [InlineData(3, 4, 25)] // 3-4-5 triangle
-    [InlineData(5, 12, 169)] // 5-12-13 triangle
-    [InlineData(8, 15, 289)] // 8-15-17 triangle
-    [InlineData(0, 0, 0)] // Zero acceleration
+    [InlineData(3.0f, 4.0f, 25.0f)] // 3-4-5 triangle
+    [InlineData(5.0f, 12.0f, 169.0f)] // 5-12-13 triangle
+    [InlineData(8.0f, 15.0f, 289.0f)] // 8-15-17 triangle
+    [InlineData(0.0f, 0.0f, 0.0f)] // Zero acceleration
     public void TotalAccelerationSquaredTest(float ax, float ay,
         float expectedTotalAccelerationSquared)
     {

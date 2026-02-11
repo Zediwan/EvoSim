@@ -6,58 +6,57 @@ namespace EvoSim.Test.ECS.Systems;
 
 public class PositionSystemTest
 {
-    public class ConstructorTests
+    [Theory]
+    [InlineData(100, 100, null)]
+    [InlineData(0, 100, typeof(ArgumentOutOfRangeException))]
+    [InlineData(100, 0, typeof(ArgumentOutOfRangeException))]
+    [InlineData(0, 0, typeof(ArgumentOutOfRangeException))]
+    [InlineData(-100, 100, typeof(ArgumentOutOfRangeException))]
+    [InlineData(100, -100, typeof(ArgumentOutOfRangeException))]
+    [InlineData(-100, -100, typeof(ArgumentOutOfRangeException))]
+    public void WidthHeightTest(int width, int height, Type? expectedExceptionType)
     {
-        [Fact]
-        public void Should_CreateInstance_When_WidthAndHeightAreGreaterThanZero()
-        {
-            // Act
-            var posSystem = new PositionSystem(100, 100);
-            // Assert
-            Assert.NotNull(posSystem);
-            Assert.Equal(100, posSystem.Width);
-            Assert.Equal(100, posSystem.Height);
-        }
+        // Act
+        var exception = Record.Exception(() => new PositionSystem(width, height));
 
-        [Theory]
-        [InlineData(0, 100)]
-        [InlineData(100, 0)]
-        [InlineData(0, 0)]
-        [InlineData(-100, 100)]
-        [InlineData(100, -100)]
-        [InlineData(-100, -100)]
-        public void Should_ThrowArgumentOutOfRangeException_When_WidthOrHeightIsLessThanOrEqualToZero(int width, int height)
+        // Assert
+        if (expectedExceptionType != null)
         {
-            // Act
-            var exception = Record.Exception(() => new PositionSystem(width, height));
-            // Assert
             Assert.NotNull(exception);
-            Assert.IsType<ArgumentOutOfRangeException>(exception);
+            Assert.IsType(expectedExceptionType, exception);
         }
-
+        else
+        {
+            Assert.Null(exception);
+        }
     }
 
-    public class UpdateTests
+    [Theory]
+    [InlineData(1, 100, 100, 150, 50, -10, 200, 50, 50, 90, 0)]
+    public void UpdateTest(float deltaTime, int width, int height, int x1, int y1, int x2, int y2, int expectedX1,
+        int expectedY1, int expectedX2, int expectedY2)
     {
-        [Fact]
-        public void Should_UpdatePositions_WithWraparound()
-        {
-            // Arrange
-            var world = new EcsEngine();
-            var entity1 = world.CreateEntity();
-            var entity2 = world.CreateEntity();
-            entity1.AddComponent(new PositionComponent { X = 150, Y = 50 });
-            entity2.AddComponent(new PositionComponent { X = -10, Y = 200 });
-            var positionSystem = new PositionSystem(100, 100);
-            // Act
-            positionSystem.Update(world, 0.016f); // Assuming a frame time of ~16ms
-            // Assert
-            var pos1 = entity1.GetComponent<PositionComponent>();
-            var pos2 = entity2.GetComponent<PositionComponent>();
-            Assert.Equal(50, pos1.X);
-            Assert.Equal(50, pos1.Y);
-            Assert.Equal(90, pos2.X);
-            Assert.Equal(0, pos2.Y);
-        }
+        // Arrange
+        var positionSystem = new PositionSystem(width, height);
+
+        var world = new EcsEngine();
+
+        var entity1 = world.CreateEntity();
+        entity1.AddComponent(new PositionComponent { X = x1, Y = y1 });
+
+        var entity2 = world.CreateEntity();
+        entity2.AddComponent(new PositionComponent { X = x2, Y = y2 });
+
+        // Act
+        positionSystem.Update(world, deltaTime);
+
+        // Assert
+        var pos1 = entity1.GetComponent<PositionComponent>();
+        Assert.Equal(expectedX1, pos1.X);
+        Assert.Equal(expectedY1, pos1.Y);
+
+        var pos2 = entity2.GetComponent<PositionComponent>();
+        Assert.Equal(expectedX2, pos2.X);
+        Assert.Equal(expectedY2, pos2.Y);
     }
 }

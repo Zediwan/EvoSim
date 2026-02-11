@@ -6,136 +6,80 @@ namespace EvoSim.Test.ECS.Systems;
 
 public class EnergySystemTest
 {
-    public class ConstructorTests
+    [Theory]
+    [InlineData(0.0f, 0.0f)]
+    [InlineData(5.0f, 5.0f)]
+    [InlineData(null, 1.0f)] // Null drain rate should use default value of 1.0f
+    [InlineData(-1.0f, 0.0f)] // Negative drain rate should be clamped to zero
+    public void DrainRateTest(float? drainRate, float expectedDrainRate)
     {
-        [Fact]
-        public void Should_InitializeWithDefaultValues()
-        {
-            // Act
-            var energySystem = new EnergySystem();
-            // Assert
-            Assert.NotNull(energySystem);
-        }
+        // Arrange
+        var energySystem = new EnergySystem();
 
-        [Fact]
-        public void Should_InitializeWithCorrectValues()
-        {
-            // Act
-            var energySystem = new EnergySystem() { DrainRate = 5 };
-            // Assert
-            Assert.NotNull(energySystem);
-        }
+        // Act
+        if (drainRate.HasValue) energySystem.DrainRate = drainRate.Value;
 
-        public class ReleaseTests() : ReleaseTest
-        {
-        }
+        // Assert
+        Assert.Equal(expectedDrainRate, energySystem.DrainRate);
     }
 
-    public class UpdateTests
+    [Theory]
+
+    #region Tests with no drain rate set (using default)
+
+    [InlineData(null, 1.0f, 50.0f, 100.0f, 49.0f)]
+    [InlineData(null, 1.0f, 0.0f, 100.0f, 0.0f)]
+    [InlineData(null, 1.0f, 50.0f, 50.0f, 49.0f)]
+
+    #endregion
+
+    #region Tests with zero drain rate (no energy should be drained)
+
+    [InlineData(0.0f, 1.0f, 50.0f, 100.0f, 50.0f)]
+    [InlineData(0.0f, 1.0f, 0.0f, 100.0f, 0.0f)]
+    [InlineData(0.0f, 1.0f, 0.0f, 50.0f, 0.0f)]
+
+    #endregion
+
+    #region Tests with different drain rate
+
+    [InlineData(2.0f, 1.0f, 0.0f, 100.0f, 0.0f)]
+    [InlineData(2.0f, 1.0f, 50.0f, 100.0f, 48.0f)]
+    [InlineData(2.0f, 1.0f, 50.0f, 50.0f, 48.0f)]
+
+    #endregion
+
+    #region Tests with zero delta Time
+
+    [InlineData(2.0f, 0.0f, 50.0f, 100.0f, 50.0f)]
+    [InlineData(2.0f, 2.0f, 0.0f, 100.0f, 0.0f)]
+    [InlineData(2.0f, 2.0f, 50.0f, 50.0f, 46.0f)]
+
+    #endregion
+
+    public void UpdateTest(float? drainRate, float deltaTime, float initialEnergy, float initialMaxEnergy,
+        float expectedEnergyPostUpdate)
     {
-        [Fact]
-        public void Should_UseEnergy_When_Updating()
-        {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            var energySystem = new EnergySystem();
-            // Act
-            energySystem.Update(ecsEngine, 1.0f);
-            // Assert
-            var energyComponent = entity.GetComponent<EnergyComponent>();
-            Assert.Equal(49, energyComponent.Energy);
-        }
+        // Arrange
+        var energySystem = new EnergySystem();
+        if (drainRate.HasValue) energySystem.DrainRate = drainRate.Value;
 
-        [Fact]
-        public void Should_UseEnergy_When_UpdatingWithMultipleEntities()
-        {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity1 = ecsEngine.CreateEntity();
-            var entity2 = ecsEngine.CreateEntity();
-            entity1.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            entity2.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            var energySystem = new EnergySystem();
-            // Act
-            energySystem.Update(ecsEngine, 1.0f);
-            // Assert
-            var energyComponent1 = entity1.GetComponent<EnergyComponent>();
-            var energyComponent2 = entity2.GetComponent<EnergyComponent>();
-            Assert.Equal(49, energyComponent1.Energy);
-            Assert.Equal(49, energyComponent2.Energy);
-        }
+        var ecsEngine = new EcsEngine();
 
-        [Fact]
-        public void Should_UseEnergy_When_UpdatingWithDifferentDrainRate()
-        {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            var energySystem = new EnergySystem() { DrainRate = 10 };
-            // Act
-            energySystem.Update(ecsEngine, 1.0f);
-            // Assert
-            var energyComponent = entity.GetComponent<EnergyComponent>();
-            Assert.Equal(40, energyComponent.Energy);
-        }
+        var entity1 = ecsEngine.CreateEntity();
+        entity1.AddComponent(new EnergyComponent(energy: initialEnergy, maxEnergy: initialMaxEnergy));
 
-        [Fact]
-        public void Should_UseEnergy_When_UpdatingWithDifferentDrainRateWithMultipleEntities()
-        {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity1 = ecsEngine.CreateEntity();
-            var entity2 = ecsEngine.CreateEntity();
-            entity1.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            entity2.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            var energySystem = new EnergySystem() { DrainRate = 10 };
-            // Act
-            energySystem.Update(ecsEngine, 1.0f);
-            // Assert
-            var energyComponent1 = entity1.GetComponent<EnergyComponent>();
-            var energyComponent2 = entity2.GetComponent<EnergyComponent>();
-            Assert.Equal(40, energyComponent1.Energy);
-            Assert.Equal(40, energyComponent2.Energy);
-        }
+        var entity2 = ecsEngine.CreateEntity();
+        entity2.AddComponent(new EnergyComponent(energy: initialEnergy, maxEnergy: initialMaxEnergy));
 
-        public class ReleaseTests() : ReleaseTest
-        {
-            [SkippableFact]
-            public void Should_NotUseEnergy_When_UpdatingWithZeroDrainRate()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                var energySystem = new EnergySystem() { DrainRate = 0 };
-                // Act
-                energySystem.Update(ecsEngine, 1.0f);
-                // Assert
-                var energyComponent = entity.GetComponent<EnergyComponent>();
-                Assert.Equal(50, energyComponent.Energy);
-            }
+        // Act
+        energySystem.Update(ecsEngine, deltaTime);
 
-            [SkippableFact]
-            public void Should_NotUseEnergy_When_UpdatingWithZeroDrainRateWithMultipleEntities()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity1 = ecsEngine.CreateEntity();
-                var entity2 = ecsEngine.CreateEntity();
-                entity1.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                entity2.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-                var energySystem = new EnergySystem() { DrainRate = 0 };
-                // Act
-                energySystem.Update(ecsEngine, 1.0f);
-                // Assert
-                var energyComponent1 = entity1.GetComponent<EnergyComponent>();
-                var energyComponent2 = entity2.GetComponent<EnergyComponent>();
-                Assert.Equal(50, energyComponent1.Energy);
-                Assert.Equal(50, energyComponent2.Energy);
-            }
-        }
+        // Assert
+        var energyComponent = entity1.GetComponent<EnergyComponent>();
+        Assert.Equal(expectedEnergyPostUpdate, energyComponent.Energy);
+
+        var energyComponent2 = entity2.GetComponent<EnergyComponent>();
+        Assert.Equal(expectedEnergyPostUpdate, energyComponent2.Energy);
     }
 }

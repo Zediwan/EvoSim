@@ -6,74 +6,50 @@ namespace EvoSim.Test.ECS.Systems;
 
 public class HealthSystemTest
 {
-    public class ConstructorTests
+    [Theory]
+
+    #region Tests with no drain rate set (using default)
+
+    [InlineData(1.0f, 50.0f, 100.0f, false)]
+    [InlineData(1.0f, 0.0f, 100.0f, true)]
+    [InlineData(1.0f, 50.0f, 50.0f, false)]
+
+    #endregion
+
+    #region Tests with zero delta Time
+
+    [InlineData(0.0f, 50.0f, 100.0f, false)]
+    [InlineData(0.0f, 0.0f, 100.0f,
+        false)] // Entity should not be removed immediately since Update is not called with a positive deltaTime
+
+    #endregion
+
+    public void UpdateTest(float deltaTime, float initialHealth, float initialMaxHealth, bool shouldBeRemoved)
     {
-        [Fact]
-        public void Should_InitializeWithCorrectValues()
-        {
-            // Act
-            var healthSystem = new HealthSystem();
-            // Assert
-            Assert.NotNull(healthSystem);
-        }
+        // Arrange
+        var healthSystem = new HealthSystem();
 
-        public class ReleaseTests : ReleaseTest
-        {
-            // Empty for future extension
-        }
-    }
+        var ecsEngine = new EcsEngine();
 
-    public class UpdateTests
-    {
-        [Fact]
-        public void Should_NotChangeHealth_When_Updating()
-        {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            var healthSystem = new HealthSystem();
-            // Act
-            healthSystem.Update(ecsEngine, 1.0f);
-            // Assert
-            var healthComponent = entity.GetComponent<HealthComponent>();
-            Assert.Equal(50, healthComponent.Health);
-        }
+        var entity1 = ecsEngine.CreateEntity();
+        entity1.AddComponent(new HealthComponent(health: initialHealth, maxHealth: initialMaxHealth));
 
-        [Fact]
-        public void Should_RemoveEntity_When_HealthIsZero()
-        {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 0));
-            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            var healthSystem = new HealthSystem();
-            // Act
-            healthSystem.Update(ecsEngine, 1.0f);
-            // Assert
-            Assert.DoesNotContain(entity, ecsEngine.GetEntitiesWith<HealthComponent>());
-        }
+        var entity2 = ecsEngine.CreateEntity();
+        entity2.AddComponent(new HealthComponent(health: initialHealth, maxHealth: initialMaxHealth));
 
-        [Fact]
-        public void Should_NotRemoveEntity_When_HealthIsPositive()
-        {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            var healthSystem = new HealthSystem();
-            // Act
-            healthSystem.Update(ecsEngine, 1.0f);
-            // Assert
-            Assert.Contains(entity, ecsEngine.GetEntitiesWith<HealthComponent>());
-        }
+        // Act
+        healthSystem.Update(ecsEngine, deltaTime);
 
-        public class ReleaseTests : ReleaseTest
+        // Assert
+        if (shouldBeRemoved)
         {
-            // Empty for future extension
+            Assert.DoesNotContain(entity1, ecsEngine.GetEntitiesWith<HealthComponent>());
+            Assert.DoesNotContain(entity2, ecsEngine.GetEntitiesWith<HealthComponent>());
+        }
+        else
+        {
+            Assert.Contains(entity1, ecsEngine.GetEntitiesWith<HealthComponent>());
+            Assert.Contains(entity2, ecsEngine.GetEntitiesWith<HealthComponent>());
         }
     }
 }

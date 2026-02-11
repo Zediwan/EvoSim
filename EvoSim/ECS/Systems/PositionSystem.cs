@@ -1,7 +1,7 @@
-﻿using EvoSim.ECS.Components;
+﻿using System.Diagnostics;
+using EvoSim.ECS.Components;
 using EvoSim.ECS.Core;
 using EvoSim.ECS.Utilities;
-using System.Diagnostics;
 
 namespace EvoSim.ECS.Systems;
 
@@ -14,8 +14,8 @@ namespace EvoSim.ECS.Systems;
 /// cref="Width"/> and <see cref="Height"/> properties, which are set during initialization.</remarks>
 public class PositionSystem : ISystem
 {
-    public int Height;
-    public int Width;
+    public readonly int Height;
+    public readonly int Width;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PositionSystem"/> class with the specified dimensions.
@@ -34,7 +34,6 @@ public class PositionSystem : ISystem
         Width = width;
         Height = height;
     }
-
 
     /// <summary>
     /// Updates the positions of all entities with a <see cref="PositionComponent"/> in the specified ECS engine, 

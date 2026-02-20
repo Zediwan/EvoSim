@@ -1,146 +1,109 @@
 ﻿using EvoSim.ECS.Components;
-using EvoSim.ECS.Core;
 using EvoSim.ECS.Utilities;
 
 namespace EvoSim.Test.ECS.Utilities;
 
 public class EnergyUtilityTest
 {
-    public class UseEnergyTests()
+    public static IEnumerable<object[]> UseEnergyTestData => new List<object[]>
     {
-        [Fact]
-        public void Should_UseEnergy_When_ValidParameters()
+        new object[]
         {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            const float amountToUse = 10;
-            // Act
-            EnergyUtility.UseEnergy(entity, amountToUse);
-            // Assert
-            var energyComponent = entity.GetComponent<EnergyComponent>();
-            Assert.Equal(40, energyComponent.Energy);
-        }
-
-        [Fact]
-        public void Should_OnlyUseEnergy_When_EntityHasHealthComponentAndSufficientEnergy()
+            1f,
+            0f,
+            new EnergyComponent(Energy: 100),
+            new EnergyComponent(Energy:  99)
+        },
+        // Test with zero amount to gain - energy should remain unchanged
+        new object[]
         {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            const float amountToUse = 20;
-            // Act
-            EnergyUtility.UseEnergy(entity, amountToUse);
-            // Assert
-            var energyComponent = entity.GetComponent<EnergyComponent>();
-            var healthComponent = entity.GetComponent<HealthComponent>();
-            Assert.Equal(30, energyComponent.Energy);
-            Assert.Equal(50, healthComponent.Health);
-        }
-
-        [Fact]
-        public void Should_UseEnergyAndHealth_When_EntityHasHealthComponentAndInsufficientEnergy()
+            0f,
+            0f,
+            new EnergyComponent(Energy: 99),
+            new EnergyComponent(Energy: 99)
+        },
+        // Test with negative amount to gain - energy should remain unchanged
+        new object[]
         {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            const float amountToUse = 60;
-            // Act
-            EnergyUtility.UseEnergy(entity, amountToUse);
-            // Assert
-            var energyComponent = entity.GetComponent<EnergyComponent>();
-            var healthComponent = entity.GetComponent<HealthComponent>();
-            Assert.Equal(0, energyComponent.Energy);
-            Assert.Equal(40, healthComponent.Health);
-        }
-
-        public class ReleaseTests() : ReleaseTest
+            -10f,
+            0f,
+            new EnergyComponent(Energy: 99),
+            new EnergyComponent(Energy: 99)
+        },
+        // Test with amount to use greater than current energy - energy should be set to 0 and missing energy should be returned
+        new object[]
         {
-            [SkippableFact]
-            public void Should_DoNothing_When_EntityDoesNotHaveEnergyComponent()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                const float amountToUse = 10;
-                // Act
-                EnergyUtility.UseEnergy(entity, amountToUse);
-                // Assert
-                Assert.True(true);
-            }
-
-            [SkippableTheory]
-            [InlineData(0)]
-            [InlineData(-10)]
-            public void Should_DoNothing_When_AmountToUseIsNegativeOrZero(int amountToUse)
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                var energyComponent = new EnergyComponent(maxEnergy: 100, energy: 50);
-                entity.AddComponent(energyComponent);
-                // Act
-                EnergyUtility.UseEnergy(entity, amountToUse);
-                // Assert
-                Assert.Equal(50, energyComponent.Energy);
-            }
+            150f,
+            50f,
+            new EnergyComponent(Energy: 100),
+            new EnergyComponent(Energy:   0)
         }
+    };
+    
+    [Theory, MemberData(nameof(UseEnergyTestData))]
+    public void UseEnergyTest(float amountToUse, float expectedMissingEnergy, EnergyComponent energyComponent,
+        EnergyComponent expectedEnergyComponent)
+    {
+        // Act
+        var actualMissingEnergy = EnergyUtility.UseEnergy(energyComponent, amountToUse);
 
+        // Assert
+        Assert.Equal(expectedMissingEnergy, actualMissingEnergy);
+        Assert.Equal(expectedEnergyComponent, energyComponent);
     }
 
-    public class GainEnergyTests()
+    public static IEnumerable<object[]> GainEnergyTestData => new List<object[]>
     {
-        [Fact]
-        public void Should_GainEnergy_When_ValidParameters()
+        new object[]
         {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new EnergyComponent(maxEnergy: 100, energy: 50));
-            const float amountToGain = 20;
-            // Act
-            EnergyUtility.GainEnergy(entity, amountToGain);
-            // Assert
-            var energyComponent = entity.GetComponent<EnergyComponent>();
-            Assert.Equal(70, energyComponent.Energy);
-        }
-
-        public class ReleaseTests() : ReleaseTest
+            1f,
+            new EnergyComponent(Energy:  99),
+            new EnergyComponent(Energy: 100)
+        },
+        new object[]
         {
-            [SkippableFact]
-            public void Should_DoNothing_When_EntityDoesNotHaveEnergyComponent()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                const float amountToGain = 10;
-                // Act
-                EnergyUtility.GainEnergy(entity, amountToGain);
-                // Assert
-                Assert.True(true);
-            }
-
-            [SkippableTheory]
-            [InlineData(0)]
-            [InlineData(-10)]
-            public void Should_DoNothing_When_AmountToGainIsNegativeOrZero(int amountToGain)
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                var energyComponent = new EnergyComponent(maxEnergy: 100, energy: 50);
-                entity.AddComponent(energyComponent);
-                // Act
-                EnergyUtility.GainEnergy(entity, amountToGain);
-                // Assert
-                Assert.Equal(50, energyComponent.Energy);
-            }
+            1f,
+            new EnergyComponent(Energy:  99, MaxEnergy: 100),
+            new EnergyComponent(Energy: 100, MaxEnergy: 100)
+        },
+        // Test with amount to gain that would exceed MaxEnergy - energy should be capped at MaxEnergy
+        new object[]
+        {
+            1f,
+            new EnergyComponent(Energy: 99, MaxEnergy: 99),
+            new EnergyComponent(Energy: 99, MaxEnergy: 99)
+        },
+        // Test with amount to gain that would exceed MaxEnergy - energy should be capped at MaxEnergy
+        new object[]
+        {
+            10f,
+            new EnergyComponent(Energy: 90, MaxEnergy: 99),
+            new EnergyComponent(Energy: 99, MaxEnergy: 99)
+        },
+        // Test with zero amount to gain - energy should remain unchanged
+        new object[]
+        {
+            0f,
+            new EnergyComponent(Energy: 99),
+            new EnergyComponent(Energy: 99)
+        },
+        // Test with negative amount to gain - energy should remain unchanged
+        new object[]
+        {
+            -10f,
+            new EnergyComponent(Energy: 99),
+            new EnergyComponent(Energy: 99)
         }
+    };
+
+    [Theory, MemberData(nameof(GainEnergyTestData))]
+    public void GainEnergyTest(float amountToGain, EnergyComponent energyComponent,
+        EnergyComponent expectedEnergyComponent)
+    {
+        // Act
+        EnergyUtility.GainEnergy(energyComponent, amountToGain);
+
+        // Assert
+        Assert.Equal(expectedEnergyComponent, energyComponent);
     }
 }
-

@@ -53,7 +53,6 @@ public class AccelerationComponentTest
         var totalAccelerationSquared = component.TotalAccelerationSquared;
 
         // Assert
-        Assert.Equal(expectedTotalAccelerationSquared, totalAccelerationSquared,
-            3); // Allowing a small margin of error for floating point calculations
+        Assert.Equal(expectedTotalAccelerationSquared, totalAccelerationSquared, 3); // Allowing a small margin of error for floating point calculations
     }
 }

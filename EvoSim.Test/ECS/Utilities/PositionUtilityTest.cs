@@ -5,85 +5,123 @@ namespace EvoSim.Test.ECS.Utilities;
 
 public class PositionUtilityTest
 {
-    public class ApplyWraparoundTests
+    public static IEnumerable<object[]> ApplyWraparoundTestData => new List<object[]>
     {
-        [Fact]
-        public void Should_NotWraparound_When_InsideBounds()
-        {
-            // Arrange
-            var positionComponent = new PositionComponent { X = 50, Y = 50 };
-            const int worldWidth = 100;
-            const int worldHeight = 100;
-            // Act
-            PositionUtility.ApplyWraparound(positionComponent, worldWidth, worldHeight);
-            // Assert
-            Assert.Equal(50, positionComponent.X);
-        }
+        new object[] { 100, 100, 
+            new PositionComponent { X =  50, Y =  50 }, 
+            new PositionComponent { X =  50, Y =  50 }
+        },
+        new object[] { 100, 100, 
+            new PositionComponent { X = -10, Y = -10 },
+            new PositionComponent { X =  90, Y =  90 }
+        },
+        new object[] { 100, 100, 
+            new PositionComponent { X =  10, Y = -10 }, 
+            new PositionComponent { X =  10, Y =  90 }
+        },
+        new object[] { 100, 100, 
+            new PositionComponent { X = -10, Y =  10 }, 
+            new PositionComponent { X =  90, Y =  10 }
+        },
+        new object[] { 100, 100, 
+            new PositionComponent { X = 110, Y = 110 }, 
+            new PositionComponent { X =  10, Y =  10 }
+        },
+        new object[] { 100, 100, 
+            new PositionComponent { X =  10, Y = 110 }, 
+            new PositionComponent { X =  10, Y =  10 }
+        },
+        new object[] { 100, 100, 
+            new PositionComponent { X = 110, Y =  10 }, 
+            new PositionComponent { X =  10, Y =  10 }
+        },
+        new object[] { 100, 100, 
+            new PositionComponent { X = -10, Y = 110 }, 
+            new PositionComponent { X =  90, Y =  10 }
+        },
+        new object[] { 100, 100, 
+            new PositionComponent { X = 110, Y = -10 }, 
+            new PositionComponent { X =  10, Y =  90 }
+        },
+        new object[] { 100, 100, 
+            new PositionComponent { X = 110, Y = 120 }, 
+            new PositionComponent { X =  10, Y =  20 }
+        },
+    };
 
-        [Theory]
-        [InlineData(10, -10, 10, 90)]
-        [InlineData(-10, 10, 90, 10)]
-        [InlineData(-10, -10, 90, 90)]
-        [InlineData(110, 10, 10, 10)]
-        [InlineData(10, 110, 10, 10)]
-        [InlineData(110, 120, 10, 20)]
-        public void Should_Wraparound_When_OutsideBounds(int x, int y, int expectedX, int expectedY)
-        {
-            // Arrange
-            var positionComponent = new PositionComponent { X = x, Y = y };
-            const int worldWidth = 100;
-            const int worldHeight = 100;
-            // Act
-            PositionUtility.ApplyWraparound(positionComponent, worldWidth, worldHeight);
-            // Assert
-            Assert.Equal(expectedX, positionComponent.X);
-            Assert.Equal(expectedY, positionComponent.Y);
-        }
+    public static IEnumerable<object[]> ApplyWraparoundDataInvalidWorldSizes => new List<object[]>
+    {
+        new object[] { 100,   0, new PositionComponent { X =  10, Y =   0 }, new PositionComponent { X =  10, Y =   0 } }, // Invalid world height (0), no wraparound
+        new object[] { 100,   0, new PositionComponent { X = -10, Y =   0 }, new PositionComponent { X = -10, Y =   0 } }, // Invalid world height (0), negative out of bounds x but skip wraparound
+        new object[] { 100,   0, new PositionComponent { X = 110, Y =   0 }, new PositionComponent { X = 110, Y =   0 } }, // Invalid world height (0), positive out of bounds x but skip wraparound
+        new object[] { 100,   0, new PositionComponent { X =  10, Y = -10 }, new PositionComponent { X =  10, Y = -10 } }, // Invalid world height (0), negative y but skip wraparound
+        new object[] { 100,   0, new PositionComponent { X =  10, Y =  10 }, new PositionComponent { X =  10, Y =  10 } }, // Invalid world height (0), positive out of bounds y but skip wraparound
+        new object[] {   0, 100, new PositionComponent { X =   0, Y =  10 }, new PositionComponent { X =   0, Y =  10 } }, // Invalid world width (0), no wraparound
+        new object[] {   0, 100, new PositionComponent { X = -10, Y =  10 }, new PositionComponent { X = -10, Y =  10 } }, // Invalid world height (0), negative out of bounds x but skip wraparound
+        new object[] {   0, 100, new PositionComponent { X =  10, Y =  10 }, new PositionComponent { X =  10, Y =  10 } }, // Invalid world height (0), positive out of bounds x but skip wraparound
+        new object[] {   0, 100, new PositionComponent { X =   0, Y = -10 }, new PositionComponent { X =   0, Y = -10 } }, // Invalid world height (0), negative out of bounds y but skip wraparound
+        new object[] {   0, 100, new PositionComponent { X =   0, Y = 110 }, new PositionComponent { X =   0, Y = 110 } }, // Invalid world height (0), positive out of bounds y but skip wraparound
+        new object[] {   0,   0, new PositionComponent { X =   0, Y =   0 }, new PositionComponent { X =   0, Y =   0 } }, // Invalid world width and height (0), no wraparound
+        new object[] {   0,   0, new PositionComponent { X = -10, Y =   0 }, new PositionComponent { X = -10, Y =   0 } }, // Invalid world width and height (0), negative out of bounds x but skip wraparound
+        new object[] {   0,   0, new PositionComponent { X =  10, Y =   0 }, new PositionComponent { X =  10, Y =   0 } }, // Invalid world width and height (0), positive out of bounds x but skip wraparound
+        new object[] {   0,   0, new PositionComponent { X =   0, Y = -10 }, new PositionComponent { X =   0, Y = -10 } }, // Invalid world width and height (0), negative out of bounds y but skip wraparound
+        new object[] {   0,   0, new PositionComponent { X =   0, Y =  10 }, new PositionComponent { X =   0, Y =  10 } }, // Invalid world width and height (0), positive out of bounds y but skip wraparound
+        new object[] { 100, -10, new PositionComponent { X =  10, Y =   0 }, new PositionComponent { X =  10, Y =   0 } }, // Invalid (negative) world height, no wraparound
+        new object[] { 100, -10, new PositionComponent { X = -20, Y =   0 }, new PositionComponent { X = -20, Y =   0 } }, // Invalid (negative) world height, negative out of bounds x but skip wraparound
+        new object[] { 100, -10, new PositionComponent { X = 120, Y =   0 }, new PositionComponent { X = 120, Y =   0 } }, // Invalid (negative) world height, positive out of bounds x but skip wraparound
+        new object[] { 100, -10, new PositionComponent { X =  10, Y = -10 }, new PositionComponent { X =  10, Y = -10 } }, // Invalid (negative) world height, negative out of bounds y but skip wraparound
+        new object[] { 100, -10, new PositionComponent { X =  10, Y = 110 }, new PositionComponent { X =  10, Y = 110 } }, // Invalid (negative) world height, positive out of bounds y but skip wraparound
+        new object[] { -10, 100, new PositionComponent { X =   0, Y =  10 }, new PositionComponent { X =   0, Y =  10 } }, // Invalid (negative) world width, no wraparound
+        new object[] { -10, 100, new PositionComponent { X = -20, Y =  10 }, new PositionComponent { X = -20, Y =  10 } }, // Invalid (negative) world width, negative out of bounds x but skip wraparound
+        new object[] { -10, 100, new PositionComponent { X = 120, Y =  10 }, new PositionComponent { X = 120, Y =  10 } }, // Invalid (negative) world width, positive out of bounds x but skip wraparound
+        new object[] { -10, 100, new PositionComponent { X =   0, Y = -10 }, new PositionComponent { X =   0, Y = -10 } }, // Invalid (negative) world width, negative out of bounds y but skip wraparound
+        new object[] { -10, 100, new PositionComponent { X =   0, Y = 110 }, new PositionComponent { X =   0, Y = 110 } }, // Invalid (negative) world width, positive out of bounds y but skip wraparound
+        new object[] { -10, -10, new PositionComponent { X =   0, Y =   0 }, new PositionComponent { X =   0, Y =   0 } }, // Invalid (negative) world width and height, no wraparound
+        new object[] { -10, -10, new PositionComponent { X = -10, Y =   0 }, new PositionComponent { X = -10, Y =   0 } }, // Invalid (negative) world width and height, negative out of bounds x but skip wraparound
+        new object[] { -10, -10, new PositionComponent { X =  10, Y =   0 }, new PositionComponent { X =  10, Y =   0 } }, // Invalid (negative) world width and height, positive out of bounds x but skip wraparound
+        new object[] { -10, -10, new PositionComponent { X =   0, Y = -10 }, new PositionComponent { X =   0, Y = -10 } }, // Invalid (negative) world width and height, negative out of bounds y but skip wraparound
+        new object[] { -10, -10, new PositionComponent { X =   0, Y =  10 }, new PositionComponent { X =   0, Y =  10 } }, // Invalid (negative) world width and height, positive out of bounds y but skip wraparound
+        new object[] { 100,   0, new PositionComponent { X =  10, Y =   0 }, new PositionComponent { X =  10, Y =   0 } }, // Invalid world height (0), no wraparound
+        new object[] { 100,   0, new PositionComponent { X = -10, Y =   0 }, new PositionComponent { X = -10, Y =   0 } }, // Invalid world height (0), negative out of bounds x but skip wraparound
+        new object[] { 100,   0, new PositionComponent { X = 110, Y =   0 }, new PositionComponent { X = 110, Y =   0 } }, // Invalid world height (0), positive out of bounds x but skip wraparound
+        new object[] { 100,   0, new PositionComponent { X =  10, Y = -10 }, new PositionComponent { X =  10, Y = -10 } }, // Invalid world height (0), negative y but skip wraparound
+        new object[] { 100,   0, new PositionComponent { X =  10, Y =  10 }, new PositionComponent { X =  10, Y =  10 } }, // Invalid world height (0), positive out of bounds y but skip wraparound
+        new object[] {   0, 100, new PositionComponent { X =   0, Y =  10 }, new PositionComponent { X =   0, Y =  10 } }, // Invalid world width (0), no wraparound
+        new object[] {   0, 100, new PositionComponent { X = -10, Y =  10 }, new PositionComponent { X = -10, Y =  10 } }, // Invalid world height (0), negative out of bounds x but skip wraparound
+        new object[] {   0, 100, new PositionComponent { X =  10, Y =  10 }, new PositionComponent { X =  10, Y =  10 } }, // Invalid world height (0), positive out of bounds x but skip wraparound
+        new object[] {   0, 100, new PositionComponent { X =   0, Y = -10 }, new PositionComponent { X =   0, Y = -10 } }, // Invalid world height (0), negative out of bounds y but skip wraparound
+        new object[] {   0, 100, new PositionComponent { X =   0, Y = 110 }, new PositionComponent { X =   0, Y = 110 } }, // Invalid world height (0), positive out of bounds y but skip wraparound
+        new object[] {   0,   0, new PositionComponent { X =   0, Y =   0 }, new PositionComponent { X =   0, Y =   0 } }, // Invalid world width and height (0), no wraparound
+        new object[] {   0,   0, new PositionComponent { X = -10, Y =   0 }, new PositionComponent { X = -10, Y =   0 } }, // Invalid world width and height (0), negative out of bounds x but skip wraparound
+        new object[] {   0,   0, new PositionComponent { X =  10, Y =   0 }, new PositionComponent { X =  10, Y =   0 } }, // Invalid world width and height (0), positive out of bounds x but skip wraparound
+        new object[] {   0,   0, new PositionComponent { X =   0, Y = -10 }, new PositionComponent { X =   0, Y = -10 } }, // Invalid world width and height (0), negative out of bounds y but skip wraparound
+        new object[] {   0,   0, new PositionComponent { X =   0, Y =  10 }, new PositionComponent { X =   0, Y =  10 } }, // Invalid world width and height (0), positive out of bounds y but skip wraparound
+        new object[] { 100, -10, new PositionComponent { X =  10, Y =   0 }, new PositionComponent { X =  10, Y =   0 } }, // Invalid (negative) world height, no wraparound
+        new object[] { 100, -10, new PositionComponent { X = -20, Y =   0 }, new PositionComponent { X = -20, Y =   0 } }, // Invalid (negative) world height, negative out of bounds x but skip wraparound
+        new object[] { 100, -10, new PositionComponent { X = 120, Y =   0 }, new PositionComponent { X = 120, Y =   0 } }, // Invalid (negative) world height, positive out of bounds x but skip wraparound
+        new object[] { 100, -10, new PositionComponent { X =  10, Y = -10 }, new PositionComponent { X =  10, Y = -10 } }, // Invalid (negative) world height, negative out of bounds y but skip wraparound
+        new object[] { 100, -10, new PositionComponent { X =  10, Y = 110 }, new PositionComponent { X =  10, Y = 110 } }, // Invalid (negative) world height, positive out of bounds y but skip wraparound
+        new object[] { -10, 100, new PositionComponent { X =   0, Y =  10 }, new PositionComponent { X =   0, Y =  10 } }, // Invalid (negative) world width, no wraparound
+        new object[] { -10, 100, new PositionComponent { X = -20, Y =  10 }, new PositionComponent { X = -20, Y =  10 } }, // Invalid (negative) world width, negative out of bounds x but skip wraparound
+        new object[] { -10, 100, new PositionComponent { X = 120, Y =  10 }, new PositionComponent { X = 120, Y =  10 } }, // Invalid (negative) world width, positive out of bounds x but skip wraparound
+        new object[] { -10, 100, new PositionComponent { X =   0, Y = -10 }, new PositionComponent { X =   0, Y = -10 } }, // Invalid (negative) world width, negative out of bounds y but skip wraparound
+        new object[] { -10, 100, new PositionComponent { X =   0, Y = 110 }, new PositionComponent { X =   0, Y = 110 } }, // Invalid (negative) world width, positive out of bounds y but skip wraparound
+        new object[] { -10, -10, new PositionComponent { X =   0, Y =   0 }, new PositionComponent { X =   0, Y =   0 } }, // Invalid (negative) world width and height, no wraparound
+        new object[] { -10, -10, new PositionComponent { X = -10, Y =   0 }, new PositionComponent { X = -10, Y =   0 } }, // Invalid (negative) world width and height, negative out of bounds x but skip wraparound
+        new object[] { -10, -10, new PositionComponent { X =  10, Y =   0 }, new PositionComponent { X =  10, Y =   0 } }, // Invalid (negative) world width and height, positive out of bounds x but skip wraparound
+        new object[] { -10, -10, new PositionComponent { X =   0, Y = -10 }, new PositionComponent { X =   0, Y = -10 } }, // Invalid (negative) world width and height, negative out of bounds y but skip wraparound
+        new object[] { -10, -10, new PositionComponent { X =   0, Y =  10 }, new PositionComponent { X =   0, Y =  10 } }, // Invalid (negative) world width and height, positive out of bounds y but skip wraparound
+    };
 
-        public class ReleaseTests : ReleaseTest
-        {
-            [SkippableTheory]
-            [InlineData(100, 0, 10, 0)] // Invalid world height (0), no wraparound
-            [InlineData(100, 0, -10, 0)] // Invalid world height (0), negative out of bounds x but skip wraparound
-            [InlineData(100, 0, 110, 0)] // Invalid world height (0), positive out of bounds x but skip wraparound
-            [InlineData(100, 0, 10, -10)] // Invalid world height (0), negative y but skip wraparound
-            [InlineData(100, 0, 10, 10)] // Invalid world height (0), positive out of bounds y but skip wraparound
-            [InlineData(0, 100, 0, 10)] // Invalid world width (0), no wraparound
-            [InlineData(0, 100, -10, 10)] // Invalid world height (0), negative out of bounds x but skip wraparound
-            [InlineData(0, 100, 10, 10)] // Invalid world height (0), positive out of bounds x but skip wraparound
-            [InlineData(0, 100, 0, -10)] // Invalid world height (0), negative out of bounds y but skip wraparound
-            [InlineData(0, 100, 0, 110)] // Invalid world height (0), positive out of bounds y but skip wraparound
-            [InlineData(0, 0, 0, 0)] // Invalid world width and height (0), no wraparound
-            [InlineData(0, 0, -10, 0)] // Invalid world width and height (0), negative out of bounds x but skip wraparound
-            [InlineData(0, 0, 10, 0)] // Invalid world width and height (0), positive out of bounds x but skip wraparound
-            [InlineData(0, 0, 0, -10)] // Invalid world width and height (0), negative out of bounds y but skip wraparound
-            [InlineData(0, 0, 0, 10)] // Invalid world width and height (0), positive out of bounds y but skip wraparound
-            [InlineData(100, -10, 10, 0)] // Invalid (negative) world height, no wraparound
-            [InlineData(100, -10, -20, 0)] // Invalid (negative) world height, negative out of bounds x but skip wraparound
-            [InlineData(100, -10, 120, 0)] // Invalid (negative) world height, positive out of bounds x but skip wraparound
-            [InlineData(100, -10, 10, -10)] // Invalid (negative) world height, negative out of bounds y but skip wraparound
-            [InlineData(100, -10, 10, 110)] // Invalid (negative) world height, positive out of bounds y but skip wraparound
-            [InlineData(-10, 100, 0, 10)] // Invalid (negative) world width, no wraparound
-            [InlineData(-10, 100, -20, 10)] // Invalid (negative) world width, negative out of bounds x but skip wraparound
-            [InlineData(-10, 100, 120, 10)] // Invalid (negative) world width, positive out of bounds x but skip wraparound
-            [InlineData(-10, 100, 0, -10)] // Invalid (negative) world width, negative out of bounds y but skip wraparound
-            [InlineData(-10, 100, 0, 110)] // Invalid (negative) world width, positive out of bounds y but skip wraparound
-            [InlineData(-10, -10, 0, 0)] // Invalid (negative) world width and height, no wraparound
-            [InlineData(-10, -10, -10, 0)] // Invalid (negative) world width and height, negative out of bounds x but skip wraparound
-            [InlineData(-10, -10, 10, 0)] // Invalid (negative) world width and height, positive out of bounds x but skip wraparound
-            [InlineData(-10, -10, 0, -10)] // Invalid (negative) world width and height, negative out of bounds y but skip wraparound
-            [InlineData(-10, -10, 0, 10)] // Invalid (negative) world width and height, positive out of bounds y but skip wraparound
-            public void Should_Skip_When_WorldParametersInvalid(int worldWidth, int worldHeight, int x, int y)
-            {
-                // Arrange
-                var positionComponent = new PositionComponent { X = x, Y = y };
-                // Act
-                PositionUtility.ApplyWraparound(positionComponent, worldWidth, worldHeight);
-                // Assert
-                Assert.Equal(x, positionComponent.X);
-                Assert.Equal(y, positionComponent.Y);
-            }
-        }
+    [Theory]
+    [MemberData(nameof(ApplyWraparoundTestData))]
+    [MemberData(nameof(ApplyWraparoundDataInvalidWorldSizes))]
+    public void ApplyWraparoundTest(int worldWidth, int worldHeight, PositionComponent positionComponent, PositionComponent expectedPositionComponent)
+    {
+        // Act
+        PositionUtility.ApplyWraparound(positionComponent, worldWidth, worldHeight);
+        // Assert
+        Assert.Equal(expectedPositionComponent, positionComponent);
     }
 }
 

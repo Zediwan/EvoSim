@@ -2,32 +2,34 @@
 
 namespace EvoSim.ECS.Components;
 
-/// <summary>
-/// Represents a color component with red, green, and blue channels, each defined as a value between 0 and 255.
-/// </summary>
-public class ColorComponent : IComponent
+public record ColorComponent(
+    byte R = 255,
+    byte G = 255,
+    byte B = 255,
+    byte A = 255
+) : IComponent
 {
     public static ColorComponent White => new() { R = 255, G = 255, B = 255, A = 255 };
 
     /// <summary>
     /// Red component of the Color, represented as a value between 0 and 255.
     /// </summary>
-    public byte R { get; set; } = 255;
+    public byte R { get; set; } = R;
 
     /// <summary>
     /// Green component of the Color, represented as a value between 0 and 255.
     /// </summary>
-    public byte G { get; set; } = 255;
+    public byte G { get; set; } = G;
 
     /// <summary>
     /// Blue component of the Color, represented as a value between 0 and 255.
     /// </summary>
-    public byte B { get; set; } = 255;
+    public byte B { get; set; } = B;
 
     /// <summary>
     /// Alpha component of the Color, represented as a value between 0 and 255.
     /// </summary>
-    public byte A { get; set; } = 255;
+    public byte A { get; set; } = A;
 
     /// <summary>
     /// Gets the color value as a 32-bit unsigned integer in ARGB format.

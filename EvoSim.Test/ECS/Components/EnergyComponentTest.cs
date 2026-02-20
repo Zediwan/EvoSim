@@ -15,7 +15,7 @@ public class EnergyComponentTest
         float expectedEnergy, float expectedMaxEnergy)
     {
         // Arrange
-        var energyComponent = new EnergyComponent(maxEnergy: initialMaxEnergy, energy: initialEnergy);
+        var energyComponent = new EnergyComponent(Energy: initialEnergy, MaxEnergy: initialMaxEnergy);
 
         // Act
         if (newEnergy.HasValue) energyComponent.Energy = newEnergy.Value;

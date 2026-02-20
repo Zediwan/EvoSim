@@ -1,7 +1,7 @@
-﻿using EvoSim.ECS.Components;
+﻿using System.Diagnostics;
+using EvoSim.ECS.Components;
 using EvoSim.ECS.Core;
 using EvoSim.ECS.Entities;
-using System.Diagnostics;
 
 namespace EvoSim.ECS.Systems;
 
@@ -25,14 +25,6 @@ public class HealthSystem : ISystem
         }
     }
 
-    /// <summary>
-    /// Handles the death of an entity by removing it from the ECS engine.
-    /// </summary>
-    /// <remarks>This method logs the death of the entity and removes it from the ECS engine.  Ensure that
-    /// both <paramref name="entity"/> and <paramref name="ecsEngine"/> are valid and initialized before calling this
-    /// method.</remarks>
-    /// <param name="entity">The entity that has died. Must not be <see langword="null"/>.</param>
-    /// <param name="ecsEngine">The ECS engine responsible for managing entities. Must not be <see langword="null"/>.</param>
     private void HandleDeath(Entity entity, EcsEngine ecsEngine)
     {
         Console.WriteLine($"Entity {entity.Id} has died. Removing from world.");

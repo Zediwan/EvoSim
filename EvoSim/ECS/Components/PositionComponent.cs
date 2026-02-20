@@ -2,17 +2,18 @@
 
 namespace EvoSim.ECS.Components;
 
-/// <summary>
-/// Represents a component that defines a position in a two-dimensional space.
-/// </summary>
-public class PositionComponent : IComponent
+public record PositionComponent(
+    int X = 0,
+    int Y = 0
+) : IComponent
 {
     /// <summary>
-    /// Represents the X-coordinate value in a two-dimensional space.
+    /// X Position
     /// </summary>
-    public int X;
+    public int X { get; set; } = X;
+
     /// <summary>
-    /// Represents the Y-coordinate of a point or object in a two-dimensional space.
+    /// Y Position
     /// </summary>
-    public int Y;
+    public int Y { get; set; } = Y;
 }

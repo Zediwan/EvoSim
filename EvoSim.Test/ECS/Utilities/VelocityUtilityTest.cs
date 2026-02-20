@@ -5,57 +5,102 @@ namespace EvoSim.Test.ECS.Utilities;
 
 public class VelocityUtilityTest
 {
-    [Theory]
-    [InlineData(10, 20, 5, 5, 15, 25)]
-    [InlineData(0, 0, -3, -4, -3, -4)]
-    [InlineData(100, 50, 0, 0, 100, 50)]
-    [InlineData(5, 5, 2.5f, 2.5f, 7, 7)]
-    public void ApplyVelocityToPositionTest(int posX, int posY, float vX, float vY, int expX, int expY)
-    {
-        // Arrange
-        var position = new PositionComponent { X = posX, Y = posY };
-        var velocity = new VelocityComponent { VX = vX, VY = vY };
+    public static IEnumerable<object[]> ApplyVelocityToPositionTestData =>
+        new List<object[]>
+        {
+            new object[] { 1.0f, 
+                new PositionComponent {  X = 10,  Y = 20 }, 
+                new VelocityComponent { VX =  5, VY =  5 }, 
+                new PositionComponent {  X = 15,  Y = 25 }
+            },
+            new object[] { 1.0f,
+                new PositionComponent {  X =  0,  Y =  0 }, 
+                new VelocityComponent { VX = -3, VY = -4 }, 
+                new PositionComponent {  X = -3,  Y = -4 }
+            },
+            new object[] { 1.0f, 
+                new PositionComponent {  X = 100,  Y = 50 }, 
+                new VelocityComponent { VX =   0, VY =  0 }, 
+                new PositionComponent {  X = 100,  Y = 50 }
+            },
+            new object[] { 1.0f, 
+                new PositionComponent {  X = 5,     Y = 5 }, 
+                new VelocityComponent { VX = 2.5f, VY = 2.5f }, 
+                new PositionComponent {  X = 7,     Y = 7 }
+            },
+            #region Zero delta time
+            new object[] { 0.0f,
+                new PositionComponent {  X = 10,  Y = 20 },
+                new VelocityComponent { VX =  5, VY =  5 },
+                new PositionComponent {  X = 10,  Y = 20 }
+            },
+            new object[] { 0.0f,
+                new PositionComponent {  X =  0,  Y =  0 },
+                new VelocityComponent { VX = -3, VY = -4 },
+                new PositionComponent {  X =  0,  Y =  0 }
+            },
+            new object[] { 0.0f,
+                new PositionComponent {  X = 5,     Y = 5 },
+                new VelocityComponent { VX = 2.5f, VY = 2.5f },
+                new PositionComponent {  X = 5,     Y = 5 }
+            }
+            #endregion
+        };
 
+    [Theory]
+    [MemberData(nameof(ApplyVelocityToPositionTestData))]
+    public void ApplyVelocityToPositionTest(float deltaTime, PositionComponent positionComponent, VelocityComponent velocityComponent, PositionComponent expectedPositionComponent)
+    {
         // Act
-        VelocityUtility.ApplyVelocityToPosition(position, velocity, 1);
+        VelocityUtility.ApplyVelocityToPosition(deltaTime, positionComponent, velocityComponent);
 
         // Assert
-        Assert.Equal(expX, position.X);
-        Assert.Equal(expY, position.Y);
+        Assert.Equal(expectedPositionComponent, positionComponent);
     }
+
+    public static IEnumerable<object[]> ClampVelocityToMaxTestData =>
+        new List<object[]>
+        {
+            // MaxVelocity = 0, no clamping
+            new object[]
+            {
+                new VelocityComponent { VX = 5, VY = 5, MaxVelocity = 0 }, 
+                new VelocityComponent { VX = 5, VY = 5, MaxVelocity = 0 }
+            }, 
+            // MaxVelocity < 0, no clamping
+            new object[]
+            {
+                new VelocityComponent { VX = 3, VY = 4, MaxVelocity = -1 }, 
+                new VelocityComponent { VX = 3, VY = 4, MaxVelocity = 0 }
+            }, 
+            // TotalVelocity = 5, MaxVelocity = 5
+            new object[]
+            {
+                new VelocityComponent { VX = 3, VY = 4, MaxVelocity = 5 }, 
+                new VelocityComponent { VX = 3, VY = 4, MaxVelocity = 5 }
+            }, 
+            // TotalVelocity < MaxVelocity
+            new object[]
+            {
+                new VelocityComponent { VX = 2, VY = 3, MaxVelocity = 5 }, 
+                new VelocityComponent { VX = 2, VY = 3, MaxVelocity = 5 }
+            }, 
+            // TotalVelocity = 10, MaxVelocity = 5
+            new object[]
+            {
+                new VelocityComponent { VX = 6, VY = 8, MaxVelocity = 5 }, 
+                new VelocityComponent { VX = 3, VY = 4, MaxVelocity = 5 }
+            } 
+        };
 
     [Theory]
-    [InlineData(5, 5, 0)] // MaxVelocity = 0, no clamping
-    [InlineData(3, 4, -1)] // MaxVelocity < 0, no clamping
-    public void ClampVelocityToMax_DoesNothing_WhenMaxVelocityIsZeroOrNegative(float vX, float vY, float maxVelocity)
+    [MemberData(nameof(ClampVelocityToMaxTestData))]
+    public void ClampVelocityToMaxTest(VelocityComponent velocityComponent, VelocityComponent expectedVelocityComponent)
     {
-        var velocity = new VelocityComponent { VX = vX, VY = vY, MaxVelocity = maxVelocity };
-        VelocityUtility.ClampVelocityToMax(velocity);
-        Assert.Equal(vX, velocity.VX);
-        Assert.Equal(vY, velocity.VY);
-        Assert.Equal(maxVelocity, velocity.MaxVelocity);
-    }
+        // Act
+        VelocityUtility.ClampVelocityToMax(velocityComponent);
 
-    [Theory]
-    [InlineData(3, 4, 5)] // TotalVelocity = 5, MaxVelocity = 5
-    [InlineData(2, 3, 5)] // TotalVelocity < MaxVelocity
-    public void ClampVelocityToMax_DoesNothing_WhenCurrentSpeedIsLessThanOrEqualToMax(float vX, float vY,
-        float maxVelocity)
-    {
-        var velocity = new VelocityComponent { VX = vX, VY = vY, MaxVelocity = maxVelocity };
-        VelocityUtility.ClampVelocityToMax(velocity);
-        Assert.Equal(vX, velocity.VX);
-        Assert.Equal(vY, velocity.VY);
-    }
-
-    [Fact]
-    public void ClampVelocityToMax_ScalesVelocity_WhenCurrentSpeedExceedsMax()
-    {
-        var velocity = new VelocityComponent { VX = 6, VY = 8, MaxVelocity = 5 };
-        // TotalVelocity = 10
-        VelocityUtility.ClampVelocityToMax(velocity);
-        float scale = 5f / 10f;
-        Assert.Equal(6 * scale, velocity.VX, 3);
-        Assert.Equal(8 * scale, velocity.VY, 3);
+        // Assert
+        Assert.Equal(expectedVelocityComponent, velocityComponent);
     }
 }

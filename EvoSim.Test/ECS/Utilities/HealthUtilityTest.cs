@@ -1,222 +1,123 @@
 ﻿using EvoSim.ECS.Components;
-using EvoSim.ECS.Core;
 using EvoSim.ECS.Utilities;
 
 namespace EvoSim.Test.ECS.Utilities;
 
 public class HealthUtilityTest
 {
-    public class TakeDamageTest()
+    public static IEnumerable<object[]> TakeDamageTestData => new List<object[]>
     {
-        [Fact]
-        public void Should_TakeDamage_When_EntityHasAllComponents()
+        // Test with no MaxHealth set - health should decrease
+        new object[]
         {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            const float damageToTake = 10;
-            // Act
-            HealthUtility.TakeDamage(entity, damageToTake);
-            // Assert
-            var healthComponent = entity.GetComponent<HealthComponent>();
-            Assert.Equal(40, healthComponent.Health);
-        }
-
-        [Fact]
-        public void Should_TakeDamage_When_ValidParameters()
+            1f,
+            new HealthComponent(Health: 100),
+            new HealthComponent(Health: 99)
+        },
+        // Test with MaxHealth set - health should decrease
+        new object[]
         {
-            // Arrange
-            var health = new HealthComponent(maxHealth: 100, health: 50);
-            const float damageToTake = 10;
-            // Act
-            HealthUtility.TakeDamage(health, damageToTake);
-            // Assert
-            Assert.Equal(40, health.Health);
-        }
-
-        [Fact]
-        public void Should_NotTakeDamage_When_AmountIsZero()
+            1f,
+            new HealthComponent(Health: 100, MaxHealth: 100),
+            new HealthComponent(Health: 99, MaxHealth: 100)
+        },
+        // Test with damage amount greater than current health - health should be set to 0
+        new object[]
         {
-            // Arrange
-            var health = new HealthComponent(maxHealth: 100, health: 50);
-            const float damageToTake = 0;
-            // Act
-            HealthUtility.TakeDamage(health, damageToTake);
-            // Assert
-            Assert.Equal(50, health.Health);
-        }
-
-        [Fact]
-        public void Should_SetHealthToZero_When_DamageExceedsCurrentHealth()
+            10f,
+            new HealthComponent(Health: 5, MaxHealth: 100),
+            new HealthComponent(Health: 0, MaxHealth: 100)
+        },
+        // Test with damage amount equal to current health - health should be set to 0
+        new object[]
         {
-            // Arrange
-            var health = new HealthComponent(maxHealth: 100, health: 50);
-            const float damageToTake = 60;
-            // Act
-            HealthUtility.TakeDamage(health, damageToTake);
-            // Assert
-            Assert.Equal(0, health.Health);
-        }
-
-        public class ReleaseTests() : ReleaseTest
+            10f,
+            new HealthComponent(Health: 10, MaxHealth: 100),
+            new HealthComponent(Health: 0, MaxHealth: 100)
+        },
+        // Test with zero amount to take - health should remain unchanged
+        new object[]
         {
-            [SkippableFact]
-            public void Should_NotTakeDamage_When_AmountIsNegative()
-            {
-                // Arrange
-                var health = new HealthComponent(maxHealth: 100, health: 50);
-                const float damageToTake = -10;
-                // Act
-                HealthUtility.TakeDamage(health, damageToTake);
-                // Assert
-                Assert.Equal(50, health.Health);
-            }
-
-            [SkippableFact]
-            public void Should_NotTakeDamage_When_EntityLacksHealthComponent()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                const float damageToTake = 10;
-                // Act
-                HealthUtility.TakeDamage(entity, damageToTake);
-                // Assert
-                Assert.False(entity.HasComponent<HealthComponent>());
-            }
-
-            [SkippableFact]
-            public void Should_NotTakeDamage_When_HealthComponentIsDead()
-            {
-                // Arrange
-                var health = new HealthComponent(maxHealth: 100, health: 0);
-                const float damageToTake = 10;
-                // Act
-                HealthUtility.TakeDamage(health, damageToTake);
-                // Assert
-                Assert.Equal(0, health.Health);
-            }
+            0f,
+            new HealthComponent(Health: 99),
+            new HealthComponent(Health: 99)
+        },
+        // Test with negative amount to take - health should remain unchanged
+        new object[]
+        {
+            -10f,
+            new HealthComponent(Health: 99),
+            new HealthComponent(Health: 99)
         }
+    };
+
+    
+    [Theory]
+    [MemberData(nameof(TakeDamageTestData))]
+    public void TakeDamageTest(float damageToTake, HealthComponent healthComponent,
+        HealthComponent expectedHealthComponent)
+    {
+        // Act
+        HealthUtility.TakeDamage(healthComponent, damageToTake);
+
+        // Assert
+        Assert.Equal(expectedHealthComponent, healthComponent);
     }
 
-    public class HealTest()
+    public static IEnumerable<object[]> HealTestData => new List<object[]>
     {
-        [Fact]
-        public void Should_Heal_When_ValidParameters()
+        new object[]
         {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            const float amountToHeal = 20;
-            // Act
-            HealthUtility.Heal(entity, amountToHeal);
-            // Assert
-            var healthComponent = entity.GetComponent<HealthComponent>();
-            Assert.Equal(70, healthComponent.Health);
-        }
-
-        [Fact]
-        public void Should_NotHeal_When_AmountIsZero()
+            1f,
+            new HealthComponent(Health: 99),
+            new HealthComponent(Health: 100)
+        },
+        new object[]
         {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            const float amountToHeal = 0;
-            // Act
-            HealthUtility.Heal(entity, amountToHeal);
-            // Assert
-            var healthComponent = entity.GetComponent<HealthComponent>();
-            Assert.Equal(50, healthComponent.Health);
-        }
-
-        [Fact]
-        public void Should_NotExceedMaxHealth_When_Healing()
+            1f,
+            new HealthComponent(Health: 99, MaxHealth: 100),
+            new HealthComponent(Health: 100, MaxHealth: 100)
+        },
+        // Test with amount to gain that would exceed MaxHealth - health should be capped at MaxHealth
+        new object[]
         {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 90));
-            const float amountToHeal = 20;
-            // Act
-            HealthUtility.Heal(entity, amountToHeal);
-            // Assert
-            var healthComponent = entity.GetComponent<HealthComponent>();
-            Assert.Equal(100, healthComponent.Health);
-        }
-
-        public class ReleaseTests() : ReleaseTest
+            1f,
+            new HealthComponent(Health: 99, MaxHealth: 99),
+            new HealthComponent(Health: 99, MaxHealth: 99)
+        },
+        // Test with amount to gain that would exceed MaxHealth - health should be capped at MaxHealth
+        new object[]
         {
-            [SkippableFact]
-            public void Should_NotHeal_When_AmountIsNegative()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-                const float amountToHeal = -10;
-                // Act
-                HealthUtility.Heal(entity, amountToHeal);
-                // Assert
-                var healthComponent = entity.GetComponent<HealthComponent>();
-                Assert.Equal(50, healthComponent.Health);
-            }
-
-            [SkippableFact]
-            public void Should_NotHeal_When_EntityLacksHealthComponent()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                const float amountToHeal = 10;
-                // Act
-                HealthUtility.Heal(entity, amountToHeal);
-                // Assert
-                Assert.False(entity.HasComponent<HealthComponent>());
-            }
+            10f,
+            new HealthComponent(Health: 90, MaxHealth: 99),
+            new HealthComponent(Health: 99, MaxHealth: 99)
+        },
+        // Test with zero amount to take - health should remain unchanged
+        new object[]
+        {
+            0f,
+            new HealthComponent(Health: 99),
+            new HealthComponent(Health: 99)
+        },
+        // Test with negative amount to take - health should remain unchanged
+        new object[]
+        {
+            -10f,
+            new HealthComponent(Health: 99),
+            new HealthComponent(Health: 99)
         }
-    }
+    };
 
-    public class IsDeadTest()
+
+    [Theory]
+    [MemberData(nameof(HealTestData))]
+    public void HealTest(float healAmount, HealthComponent healthComponent,
+        HealthComponent expectedHealthComponent)
     {
-        [Fact]
-        public void Should_ReturnTrue_When_HealthIsZero()
-        {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 0));
-            // Act
-            var isDead = !entity.GetComponent<HealthComponent>().IsAlive;
-            // Assert
-            Assert.True(isDead);
-        }
-        [Fact]
-        public void Should_ReturnFalse_When_HealthIsAboveZero()
-        {
-            // Arrange
-            var ecsEngine = new EcsEngine();
-            var entity = ecsEngine.CreateEntity();
-            entity.AddComponent(new HealthComponent(maxHealth: 100, health: 50));
-            // Act
-            var isDead = !entity.GetComponent<HealthComponent>().IsAlive;
-            // Assert
-            Assert.False(isDead);
-        }
+        // Act
+        HealthUtility.Heal(healthComponent, healAmount);
 
-        public class ReleaseTests : ReleaseTest
-        {
-            [SkippableFact]
-            public void Should_ReturnFalse_When_EntityLacksHealthComponent()
-            {
-                // Arrange
-                var ecsEngine = new EcsEngine();
-                var entity = ecsEngine.CreateEntity();
-                // Act & Assert
-                Assert.True(HealthUtility.IsDead(entity));
-            }
-        }
+        // Assert
+        Assert.Equal(expectedHealthComponent, healthComponent);
     }
 }

@@ -1,22 +1,22 @@
-﻿using EvoSim.ECS.Core;
 using System.Diagnostics;
+using EvoSim.ECS.Core;
 
 namespace EvoSim.ECS.Components;
 
-/// <summary>
-/// Represents a health component for an entity, managing its current health, maximum health, and alive status.
-/// </summary>
-/// <remarks>This component enforces constraints on health values, ensuring that the current health cannot exceed
-/// the maximum health or fall below zero. The <see cref="IsAlive"/> property provides a quick way to determine if the
-/// entity is still alive.</remarks>
-public class HealthComponent : IComponent
+public record HealthComponent(
+    float Health = 0,
+    float MaxHealth = float.MaxValue
+) : IComponent
 {
-    private float _health;
+    private float _health = Health;
+    private float _maxHealth = MaxHealth;
+
     /// <summary>
-    /// Gets or sets the current health value of the entity.
+    /// The current health level.
     /// </summary>
-    /// <remarks>The health value cannot exceed <see cref="MaxHealth"/> or be less than 0.  Any value set
-    /// outside this range will be automatically clamped.</remarks>
+    /// <remarks>
+    /// Values will be clamped between 0 and <see cref="MaxHealth"/>.
+    /// </remarks>
     public float Health
     {
         get => _health;
@@ -28,20 +28,22 @@ public class HealthComponent : IComponent
             _health = Math.Clamp(value, 0, MaxHealth);
         }
     }
-    private float _maxHealth;
 
+    // TODO: Should setting this value clamp Health right away?
+    // TODO: Should a MaxHealth of 0 be treated as "no limit" instead of clamping to 0? Or should we use a nullable float for MaxHealth to represent "no limit" more explicitly?
     /// <summary>
-    /// Gets or sets the maximum health value for the entity.
+    /// The maximum health level.
     /// </summary>
+    /// <remarks>
+    /// Negative values will be clamped to 0.
+    /// </remarks>
     public float MaxHealth
     {
         get => _maxHealth;
         set
         {
             Debug.Assert(value >= 0, $"{nameof(MaxHealth)} ({MaxHealth}) cannot be negative.");
-
             _maxHealth = Math.Max(0, value);
-            // TODO: define if setting max Health should clamp current health or not.
             Health = Math.Min(Health, MaxHealth); // Ensure current health does not exceed new max health
         }
     }
@@ -50,10 +52,4 @@ public class HealthComponent : IComponent
     /// Gets a value indicating whether the entity is alive.
     /// </summary>
     public bool IsAlive => Health > 0;
-
-    public HealthComponent(float maxHealth = 0, float health = 0)
-    {
-        MaxHealth = maxHealth;
-        Health = health;
-    }
 }

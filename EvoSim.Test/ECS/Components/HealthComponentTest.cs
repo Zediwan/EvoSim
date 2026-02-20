@@ -13,7 +13,7 @@ public class HealthComponentTest
         float expectedHealth, float expectedMaxHealth)
     {
         // Arrange
-        var healthComponent = new HealthComponent(maxHealth: initialMaxHealth, health: initialHealth);
+        var healthComponent = new HealthComponent(Health: initialHealth, MaxHealth: initialMaxHealth);
 
         // Act
         if (newMaxHealth.HasValue) healthComponent.MaxHealth = newMaxHealth.Value;
@@ -31,7 +31,7 @@ public class HealthComponentTest
     public void IsAliveTest(float health, float maxHealth, bool expected)
     {
         // Arrange
-        var healthComponent = new HealthComponent(maxHealth: maxHealth, health: health);
+        var healthComponent = new HealthComponent(MaxHealth: maxHealth, Health: health);
 
         // Act
         var isAlive = healthComponent.IsAlive;

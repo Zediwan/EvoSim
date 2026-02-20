@@ -1,13 +1,23 @@
-﻿using EvoSim.ECS.Components;
+﻿using System.Diagnostics;
+using EvoSim.ECS.Components;
 using EvoSim.ECS.Core;
 using EvoSim.ECS.Utilities;
-using System.Diagnostics;
 
 namespace EvoSim.ECS.Systems;
 
 public class AccelerationSystem : ISystem
 {
-    private const int MaxRotationAngle = 45; // degrees
+    /// <summary>
+    /// Energy used per unit of acceleration applied.  Set to 0 to disable energy usage for acceleration.
+    /// </summary>
+    public float AccelerationEnergyRatio = 1;
+
+    /// <summary>
+    /// Maximum angle (in degrees) that can be applied to an entity's rotation. Set to 0 to disable random rotation changes.
+    /// </summary>
+    public int MaxRandomMovementRotationAngle;
+
+    public bool RandomMovementEnabled = true;
 
     public void Update(EcsEngine ecsEngine, float deltaTime)
     {
@@ -17,15 +27,26 @@ public class AccelerationSystem : ISystem
         foreach (var entity in ecsEngine.GetEntitiesWith(typeof(AccelerationComponent), typeof(VelocityComponent)))
         {
             var accelerationComponent = entity.GetComponent<AccelerationComponent>();
-
-            var (rotX, rotY) = VectorUtility.GetRotationVector(accelerationComponent.AX, accelerationComponent.AY,
-                Random.Shared.NextDouble() * MaxRotationAngle * 2 - MaxRotationAngle);
+            var accelerationApplied = 0f;
 
             // Randomly change acceleration
-            AccelerationUtility.ApplyAcceleration(entity, rotX, rotY, deltaTime);
+            if (RandomMovementEnabled)
+            {
+                accelerationApplied += AccelerationUtility.ApplyRandomAcceleration(deltaTime, accelerationComponent, MaxRandomMovementRotationAngle);
+            }
 
             // Apply acceleration to velocity
-            AccelerationUtility.ApplyAccelerationToVelocity(entity, deltaTime);
+            accelerationApplied += AccelerationUtility.ApplyAccelerationToVelocity(deltaTime, accelerationComponent, entity.GetComponent<VelocityComponent>());
+
+            if (accelerationApplied > 0 && AccelerationEnergyRatio > 0 && entity.HasComponent<EnergyComponent>())
+            {
+                var missingEnergy = EnergyUtility.UseEnergy(entity.GetComponent<EnergyComponent>(), accelerationApplied * AccelerationEnergyRatio);
+
+                if (missingEnergy > 0 && entity.HasComponent<HealthComponent>())
+                {
+                    HealthUtility.TakeDamage(entity.GetComponent<HealthComponent>(), missingEnergy);
+                }
+            }
         }
     }
 }

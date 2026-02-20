@@ -2,15 +2,11 @@
 
 public static class VectorUtility
 {
-    /// <summary>
-    /// Given a point (x, y) and an angle in degrees, returns the coordinates of the point after rotation around the origin (0,0).
-    /// </summary>
-    /// <param name="x">X coordinate</param>
-    /// <param name="y">Y coordinate</param>
-    /// <param name="angle">Angle in degrees to rotate counterclockwise</param>
-    /// <returns></returns>
     public static (float, float) Rotate(double x, double y, double angle)
     {
+        if (x == 0 && y == 0) return (0, 0);
+        if (angle == 0) return ((float)x, (float)y);
+
         // If angle is negative convert to positive equivalent
         if (angle < 0) angle = 360 + angle;
 
@@ -23,16 +19,31 @@ public static class VectorUtility
         return (newX, newY);
     }
 
-    /// <summary>
-    /// Given a vector (x, y) and an angle in degrees, return the vector that needs to be applied to achieve that rotation.
-    /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <param name="angle"></param>
-    /// <returns></returns>
-    public static (float, float) GetRotationVector(double x, double y, double angle)
+    public static (float, float) Scale(double x, double y, double scalar)
     {
-        var (rotatedX, rotatedY) = Rotate(x, y, angle);
-        return ((float)(rotatedX - x), (float)(rotatedY - y));
+        if (scalar == 0) return ((float)x, (float)y);
+
+        return ((float)(x * scalar), (float)(y * scalar));
+    }
+
+    public static (float, float) Clamp(double x, double y, double magnitude)
+    {
+        if (x == 0 && y == 0) return (0, 0);
+        if (magnitude == 0) return ((float)x, (float)y);
+
+        var length = MathF.Sqrt((float)x * (float)x + (float)y * (float)y);
+
+        // If the length of the vector is less than or equal to the specified magnitude, return the original vector as a tuple of single-precision floating-point values.
+        if (length <= magnitude) return ((float)x, (float)y);
+
+        var scale = magnitude / length;
+        return ((float)(x * scale), (float)(y * scale));
+    }
+
+    public static (float, float) GetRandomUnitRotationVector(double x, double y, double rotation)
+    {
+        var (rotatedX, rotatedY) = Rotate(x, y, rotation);
+        var (clampedX, clampedY) = Clamp(rotatedX, rotatedY, 1);
+        return (clampedX, clampedY);
     }
 }

@@ -6,77 +6,71 @@ namespace EvoSim.Test.ECS.Systems;
 
 public class AccelerationSystemTest
 {
-    // NOTE: The following test cases are commented out because the update method uses a utility Function that is randomly changing acceleration therefore making it impossible to predict the expected velocity values.
-    //[Theory]
-    //[InlineData(1f, 1f, 0f, 0f, 1f, 1f, 0f, 0f, 1f)]
-    //[InlineData(0f, 1f, 0f, 0f, 1f, 0f, 0f, 0f, 0f)] // Zero delta time should result in no change in velocity
-    //[InlineData(1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)] // No acceleration should result in no change in velocity
-    //public void UpdateTest(float deltaTime, float ax1, float ay1, float ax2, float ay2, float expectedVx1,
-    //    float expectedVy1, float expectedVx2, float expectedVy2)
-    //{
-    //    // Arrange
-    //    var accelerationSystem = new AccelerationSystem();
+    // TODO: Write tests for the usage of health when not sufficent energy is available.
 
-    //    var ecsEngine = new EcsEngine();
+    public static IEnumerable<object[]> UpdateTestData => new List<object[]>
+    {
+        new object[] { 1f,
+            new AccelerationComponent(AX: 1f, AY: 0f), new VelocityComponent(VX: 0, VY: 0), new EnergyComponent(Energy: 100),
+            new AccelerationComponent(AX: 1f, AY: 0f), new VelocityComponent(VX: 1, VY: 0), new EnergyComponent(Energy: 99)
+        },
+        // Test with no acceleration - velocity and energy should remain unchanged
+        new object[] { 1f,
+            new AccelerationComponent(AX: 0f, AY: 0f), new VelocityComponent(VX: 0, VY: 0), new EnergyComponent(Energy: 100),
+            new AccelerationComponent(AX: 0f, AY: 0f), new VelocityComponent(VX: 0, VY: 0), new EnergyComponent(Energy: 100)
+        },
+        #region No energy component
+        // Velocity should still be updated
+        new object[] { 1f,
+            new AccelerationComponent(AX: 1f, AY: 0f), new VelocityComponent(VX: 0, VY: 0), null,
+            new AccelerationComponent(AX: 1f, AY: 0f), new VelocityComponent(VX: 1, VY: 0), null
+        },
+        #endregion
+        #region No velocity component
+        // Acceleration and energy should remain unchanged
+        new object[] { 1f,
+            new AccelerationComponent(AX: 1f, AY: 0f), null, new EnergyComponent(Energy: 100),
+            new AccelerationComponent(AX: 1f, AY: 0f), null, new EnergyComponent(Energy: 100)
+        },
+        #endregion
+        #region No acceleration component
+        // Velocity and energy should remain unchanged
+        new object[] { 1f,
+            null, new VelocityComponent(VX: 0, VY: 0), new EnergyComponent(Energy: 100),
+            null, new VelocityComponent(VX: 0, VY: 0), new EnergyComponent(Energy: 100)
+        },
+        #endregion
+        #region No delta time
+        // No changes should be made to the components
+        new object[] { 0f,
+            new AccelerationComponent(AX: 1f, AY: 0f), new VelocityComponent(VX: 0, VY: 0), new EnergyComponent(Energy: 100),
+            new AccelerationComponent(AX: 1f, AY: 0f), new VelocityComponent(VX: 0, VY: 0), new EnergyComponent(Energy: 100)
+        },
+        #endregion
+    };
 
-    //    var entity1 = ecsEngine.CreateEntity();
-    //    entity1.AddComponent(new AccelerationComponent { AX = ax1, AY = ay1 });
-    //    entity1.AddComponent(new VelocityComponent());
-
-    //    var entity2 = ecsEngine.CreateEntity();
-    //    entity2.AddComponent(new AccelerationComponent { AX = ax2, AY = ay2 });
-    //    entity2.AddComponent(new VelocityComponent());
-
-    //    // Act
-    //    accelerationSystem.Update(ecsEngine, deltaTime);
-
-    //    // Assert
-    //    var velocityComponent1 = entity1.GetComponent<VelocityComponent>();
-    //    Assert.Equal(expectedVx1, velocityComponent1.VX);
-    //    Assert.Equal(expectedVy1, velocityComponent1.VY);
-
-    //    var velocityComponent2 = entity2.GetComponent<VelocityComponent>();
-    //    Assert.Equal(expectedVx2, velocityComponent2.VX);
-    //    Assert.Equal(expectedVy2, velocityComponent2.VY);
-    //}
-
-    [Fact]
-    public void UpdateWithoutVelocityComponentTest()
+    [Theory, MemberData(nameof(UpdateTestData))]
+    public void UpdateTest(float deltaTime, 
+        AccelerationComponent? aC, VelocityComponent? vC, EnergyComponent? eC,
+        AccelerationComponent expectedAc, VelocityComponent expectedVc, EnergyComponent expectedEc)
     {
         // Arrange
-        var accelerationSystem = new AccelerationSystem();
+        // Disable random movement for testing by setting MaxRandomMovementRotationAngle and RandomMovementEnabled to false
+        var accelerationSystem = new AccelerationSystem { MaxRandomMovementRotationAngle = 0, RandomMovementEnabled = false };
 
         var ecsEngine = new EcsEngine();
 
         var entity = ecsEngine.CreateEntity();
-        entity.AddComponent(new AccelerationComponent() { AX = 10, AY = 10 });
+        if (aC != null) entity.AddComponent(aC);
+        if (vC != null) entity.AddComponent(vC);
+        if (eC != null) entity.AddComponent(eC);
 
         // Act
-        accelerationSystem.Update(ecsEngine, deltaTime: 1.0f);
+        accelerationSystem.Update(ecsEngine, deltaTime);
 
         // Assert
-        var accelerationComponent = entity.GetComponent<AccelerationComponent>();
-        Assert.Equal(10, accelerationComponent.AX);
-        Assert.Equal(10, accelerationComponent.AY);
-    }
-
-    [Fact]
-    public void UpdateWithoutAccelerationComponentTest()
-    {
-        // Arrange
-        var velocitySystem = new VelocitySystem();
-
-        var ecsEngine = new EcsEngine();
-
-        var entity = ecsEngine.CreateEntity();
-        entity.AddComponent(new VelocityComponent() { VX = 10, VY = 10 });
-
-        // Act
-        velocitySystem.Update(ecsEngine, deltaTime: 1.0f);
-
-        // Assert
-        var velocityComponent = entity.GetComponent<VelocityComponent>();
-        Assert.Equal(10, velocityComponent.VX);
-        Assert.Equal(10, velocityComponent.VY);
+        if (aC != null) Assert.Equal(expectedAc, entity.GetComponent<AccelerationComponent>());
+        if (vC != null) Assert.Equal(expectedVc, entity.GetComponent<VelocityComponent>());
+        if (eC != null) Assert.Equal(expectedEc, entity.GetComponent<EnergyComponent>());
     }
 }

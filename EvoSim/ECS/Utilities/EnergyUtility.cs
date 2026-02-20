@@ -1,55 +1,42 @@
-﻿using EvoSim.ECS.Components;
-using EvoSim.ECS.Entities;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using EvoSim.ECS.Components;
 
 namespace EvoSim.ECS.Utilities;
 
 public static class EnergyUtility
 {
-    public static void UseEnergy(Entity entity, float amount)
+    /// <summary>
+    /// Uses Energy. If the amount of energy to use exceeds the current energy, it will use all remaining energy and return the missing amount.
+    /// </summary>
+    /// <param name="energyComponent">The EnergyComponent to use energy from.</param>
+    /// <param name="amount">The amount of energy to use.</param>
+    /// <returns>The amount of energy that could not be used (i.e., the missing amount).</returns>
+    public static float UseEnergy(EnergyComponent energyComponent, float amount)
     {
-        Debug.Assert(entity.HasComponent<EnergyComponent>(), $"Entity {entity.Id} does not have a {nameof(EnergyComponent)}.");
         Debug.Assert(amount >= 0, $"Amount to use ({amount}) cannot be negative.");
+        if (amount <= 0) return 0;
 
-        if (!entity.HasComponent<EnergyComponent>()) return;
-        var energyComponent = entity.GetComponent<EnergyComponent>();
+        var missingEnergy = Math.Max(0, amount - energyComponent.Energy);
+        energyComponent.Energy -= amount;
 
-        amount = Math.Max(amount, 0);
-        var newEnergy = energyComponent.Energy - amount;
-
-        Console.WriteLine($"Entity {entity.Id} used {amount} energy. Remaining: {energyComponent.Energy}");
-
-        if (newEnergy > 0)
-        {
-            energyComponent.Energy = newEnergy;
-            return;
-        }
-
-        energyComponent.Energy = 0;
-        var damageTaken = -newEnergy;
-
-        Console.WriteLine($"Entity {entity.Id} depleted energy and will lose {damageTaken} health instead.");
-
-        if (entity.HasComponent<HealthComponent>())
-        {
-            HealthUtility.TakeDamage(entity, damageTaken);
-            return;
-        }
-
-        Console.WriteLine($"Entity {entity.Id} does not have a {nameof(HealthComponent)}.");
+        return missingEnergy;
     }
 
-    public static void GainEnergy(Entity entity, float amount)
+    /// <summary>
+    /// Gains Energy. 
+    /// </summary>
+    /// <remarks>
+    /// Excess energy handling is managed in <see cref="EnergyComponent.Energy"/>.
+    /// </remarks>
+    /// <param name="energyComponent">The EnergyComponent to gain energy for.</param>
+    /// <param name="amount">The amount of energy to gain.</param>
+    public static void GainEnergy(EnergyComponent energyComponent, float amount)
     {
-        Debug.Assert(entity.HasComponent<EnergyComponent>(), $"Entity {entity.Id} does not have a {nameof(EnergyComponent)}.");
         Debug.Assert(amount >= 0, $"Amount to gain ({amount}) cannot be negative.");
+        if (amount <= 0) return;
 
-        if (!entity.HasComponent<EnergyComponent>()) return;
-        var energyComponent = entity.GetComponent<EnergyComponent>();
-
-        amount = Math.Max(amount, 0);
         energyComponent.Energy += amount;
 
-        Console.WriteLine($"Entity {entity.Id} gained {amount} energy. Total: {energyComponent.Energy}");
+        Console.WriteLine($"Entity gained {amount} energy. Total: {energyComponent.Energy}");
     }
 }

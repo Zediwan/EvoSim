@@ -2,7 +2,6 @@
 
 namespace EvoSim.ECS.Components;
 
-public class ReproductionComponent : IComponent
+public record ReproductionComponent : IComponent
 {
-
 }

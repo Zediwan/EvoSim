@@ -19,7 +19,7 @@ public partial class MainWindow : Window
 
     private const int _width = 800;
     private const int _height = 600;
-    
+
     public MainWindow()
     {
         InitializeComponent();

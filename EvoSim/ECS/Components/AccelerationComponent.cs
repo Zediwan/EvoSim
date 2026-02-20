@@ -1,39 +1,46 @@
-﻿using EvoSim.ECS.Core;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using EvoSim.ECS.Core;
 
 namespace EvoSim.ECS.Components;
 
-/// <summary>
-/// Represents a component that defines acceleration properties for an object in a 2D space.
-/// </summary>
-/// <remarks>This component provides properties to manage and calculate acceleration values, including individual 
-/// acceleration components along the X and Y axes, as well as the total acceleration magnitude.</remarks>
-public class AccelerationComponent : IComponent
+public record AccelerationComponent(
+    float AX = 0,
+    float AY = 0,
+    float MaxAcceleration = float.MaxValue
+) : IComponent
 {
-    private float _maxAcceleration;
+    private float _maxAcceleration = MaxAcceleration;
+
     /// <summary>
-    /// Gets or sets the maximum acceleration value.
+    /// The X-Axis acceleration
     /// </summary>
+    public float AX { get; set; } = AX;
+
+    /// <summary>
+    /// The Y-Axis acceleration
+    /// </summary>
+    public float AY { get; set; } = AY;
+
+    // TODO: Should setting this value clamp the Acceleration right away?
+    // TODO: Should a MaxAcceleration of 0 be treated as "no limit" instead of clamping to 0? Or should we use a nullable float for MaxAcceleration to represent "no limit" more explicitly?
+    /// <summary>
+    /// The maximum allowed acceleration magnitude.
+    /// </summary>
+    /// <remarks>
+    /// Negative values will be clamped to 0.
+    /// </remarks>
     public float MaxAcceleration
     {
         get => _maxAcceleration;
         set
         {
             Debug.Assert(value >= 0, $"{nameof(MaxAcceleration)} ({value}) must be non-negative.");
-            _maxAcceleration = Math.Max(value, 0);
+            _maxAcceleration = Math.Max(0, value);
         }
     }
-    /// <summary>
-    /// Gets or sets the X-Axis acceleration of the object's position in a 2D space.
-    /// </summary>
-    public float AX { get; set; }
-    /// <summary>
-    /// Gets or sets the Y-Axis acceleration of the object's position in a 2D space.
-    /// </summary>
-    public float AY { get; set; }
 
     /// <summary>
-    /// Gets the squared magnitude of the total acceleration vector.
+    /// Gets the squared magnitude of the acceleration vector.
     /// </summary>
     public float TotalAccelerationSquared => AX * AX + AY * AY;
 
@@ -44,5 +51,10 @@ public class AccelerationComponent : IComponent
     /// Rather use <see cref="TotalAccelerationSquared"/> when comparing accelerations, to avoid the computational cost of a square root operation.
     /// </remarks>
     public float TotalAcceleration => (float)Math.Sqrt(TotalAccelerationSquared);
-}
 
+    // TODO: consider a small epsilon for floating-point precision
+    /// <summary>
+    /// Gets a value indicating whether the object has a non-zero acceleration.
+    /// </summary>
+    public bool HasAcceleration => AX != 0 || AY != 0;
+}

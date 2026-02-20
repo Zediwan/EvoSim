@@ -16,8 +16,8 @@ public class PositionComponentTest
         var component = new PositionComponent();
 
         // Act
-        if(initialX.HasValue) component.X = initialX.Value;
-        if(initialY.HasValue) component.Y = initialY.Value;
+        if (initialX.HasValue) component.X = initialX.Value;
+        if (initialY.HasValue) component.Y = initialY.Value;
 
         // Assert
         Assert.Equal(expectedX, component.X);

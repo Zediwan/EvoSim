@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using EvoSim.ECS.Core;
 
 namespace EvoSim.ECS.Components;
@@ -29,7 +29,6 @@ public record HealthComponent(
         }
     }
 
-    // TODO: Should setting this value clamp Health right away?
     // TODO: Should a MaxHealth of 0 be treated as "no limit" instead of clamping to 0? Or should we use a nullable float for MaxHealth to represent "no limit" more explicitly?
     /// <summary>
     /// The maximum health level.
@@ -44,7 +43,7 @@ public record HealthComponent(
         {
             Debug.Assert(value >= 0, $"{nameof(MaxHealth)} ({MaxHealth}) cannot be negative.");
             _maxHealth = Math.Max(0, value);
-            Health = Math.Min(Health, MaxHealth); // Ensure current health does not exceed new max health
+            Health = Health; // Re-clamp current health to new max
         }
     }
 

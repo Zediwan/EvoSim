@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using EvoSim.ECS.Core;
 
 namespace EvoSim.ECS.Components;
@@ -29,7 +29,6 @@ public record EnergyComponent(
         }
     }
 
-    // TODO: Should setting this value clamp Energy right away?
     // TODO: Should a MaxEnergy of 0 be treated as "no limit" instead of clamping to 0? Or should we use a nullable float for MaxEnergy to represent "no limit" more explicitly?
     /// <summary>
     /// The maximum energy level.
@@ -44,7 +43,7 @@ public record EnergyComponent(
         {
             Debug.Assert(value >= 0, $"MaxEnergy ({MaxEnergy}) cannot be negative.");
             _maxEnergy = Math.Max(0, value);
-            Energy = Math.Min(Energy, MaxEnergy); // Ensure current energy does not exceed new max energy
-    }
+            Energy = Energy; // Re-clamp current energy to new max
+        }
     }
 }
